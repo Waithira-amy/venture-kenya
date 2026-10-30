@@ -18,7 +18,7 @@ export default function RegisterForm() {
             {/* Left Column: Text */}
             <div>
               <h2 className="font-serif text-4xl md:text-5xl font-bold mb-4 leading-tight">
-                Join The<br />Movement
+                Register<br />Here
               </h2>
               <p className="text-[#FCFCFA]/70 font-light text-sm md:text-base max-w-sm">
                 Register your talent for the Kenya Culture Shoot and help showcase our heritage to the world.

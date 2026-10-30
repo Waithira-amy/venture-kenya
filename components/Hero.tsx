@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section id="hero" className="relative min-h-[100vh] flex flex-col justify-center pt-32 pb-20 bg-[#0F1611] overflow-hidden">
+    <section id="hero" className="relative min-h-[100vh] flex flex-col justify-center pt-40 md:pt-32 pb-20 bg-[#0F1611] overflow-hidden">
       <div className="absolute inset-0 z-0">
         <img 
           src="/viva-americana-_pfAO4mz-RY-unsplash.jpg" 
@@ -16,7 +16,6 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#0F1611]/40 via-[#0F1611]/70 to-[#0F1611]" />
       </div>
 
-      {/* Added pb-32 md:pb-0 here to push content higher on mobile while leaving desktop centered */}
       <div className="relative z-10 max-w-6xl mx-auto px-6 w-full flex flex-col justify-center h-full pb-32 md:pb-0">
         <motion.div 
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}
@@ -36,7 +35,7 @@ export default function Hero() {
 
         <motion.div 
           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-col md:flex-row md:items-end justify-between gap-10 border-t border-white/20 pt-10 mt-10"
+          className="flex flex-col md:flex-row md:items-end justify-between gap-10 border-t-0 md:border-t md:border-white/20 pt-4 md:pt-10 mt-8 md:mt-10"
         >
           <p className="text-base md:text-lg text-[#FCFCFA]/90 max-w-xl font-light leading-relaxed drop-shadow-md">
             A digital platform dedicated to showcasing Kenya's cultural diversity, historical landmarks, and creative talent to the world.

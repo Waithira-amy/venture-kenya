@@ -28,7 +28,7 @@ export default function Register() {
   };
 
   return (
-    <section id="register" className="py-32 bg-[#FCFCFA] flex items-center justify-center px-6">
+    <section id="register" className="relative pt-4 pb-20 bg-[#FCFCFA] z-10">
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.8 }}
         className="w-full max-w-4xl bg-[#0F1611] rounded-[3rem] p-10 md:p-16 text-[#FCFCFA] shadow-2xl"
@@ -36,7 +36,7 @@ export default function Register() {
         <div className="grid md:grid-cols-2 gap-16 items-center">
           
           <div>
-            <h2 className="font-serif text-4xl md:text-5xl font-bold mb-6 leading-[1.1]">Join The Movement</h2>
+            <h2 className="font-serif text-4xl md:text-5xl font-bold mb-6 leading-[1.1]">Register Here</h2>
             <p className="text-[#FCFCFA]/60 text-base font-light mb-8">
               Register your talent for the Kenya Culture Shoot and help showcase our heritage to the world.
             </p>

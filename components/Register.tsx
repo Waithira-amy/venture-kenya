@@ -13,70 +13,36 @@ export default function RegisterForm() {
           transition={{ duration: 0.8 }}
           className="bg-[#0F1611] rounded-[2rem] p-10 md:p-16 text-[#FCFCFA] shadow-2xl w-full"
         >
-          <div className="grid md:grid-cols-2 gap-12 items-start">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
             
             {/* Left Column: Text */}
             <div>
               <h2 className="font-serif text-4xl md:text-5xl font-bold mb-4 leading-tight">
                 Register<br />Here
               </h2>
-              <p className="text-[#FCFCFA]/70 font-light text-sm md:text-base max-w-sm">
-                Register your talent for the Kenya Culture Shoot and help showcase our heritage to the world.
+              <p className="text-[#FCFCFA]/70 font-light text-sm md:text-base max-w-sm leading-relaxed">
+                Register your talent for the Kenya Culture Shoot and help showcase our heritage to the world. Complete your details and portfolio uploads securely below.
               </p>
             </div>
 
-            {/* Right Column: Form Inputs & Upload Link */}
-            <form className="flex flex-col gap-5">
-              <input 
-                type="text" 
-                placeholder="Full Name" 
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-sm outline-none focus:border-[#E6A26C] transition-colors text-white placeholder-white/40"
-              />
-              <div className="grid grid-cols-2 gap-5">
-                <input 
-                  type="number" 
-                  placeholder="Age" 
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-sm outline-none focus:border-[#E6A26C] transition-colors text-white placeholder-white/40"
-                />
-                <input 
-                  type="tel" 
-                  placeholder="Phone" 
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-sm outline-none focus:border-[#E6A26C] transition-colors text-white placeholder-white/40"
-                />
-              </div>
-              <select 
-                defaultValue="" 
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-sm outline-none focus:border-[#E6A26C] transition-colors text-white/40 appearance-none"
-              >
-                <option value="" disabled>Select Category</option>
-                <option value="model" className="text-black">Model / Actor</option>
-                <option value="makeup" className="text-black">Makeup Artist</option>
-                <option value="fashion" className="text-black">Fashion Designer</option>
-                <option value="photo_video" className="text-black">Photographer / Videographer</option>
-              </select>
-
-              {/* Google Form Upload Link Box */}
-              <div className="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col gap-2">
-                <p className="text-xs text-[#FCFCFA]/70">
-                  
+            {/* Right Column: Google Form Action Portal */}
+            <div className="flex flex-col gap-5">
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-8 flex flex-col items-center text-center">
+                <h3 className="font-serif text-xl font-medium text-white mb-2">Official Application Portal</h3>
+                <p className="text-xs text-[#FCFCFA]/60 mb-8 leading-relaxed max-w-xs">
+                  Click below to open the registration form where you can submit your personal credentials, category, and photo/portfolio uploads.
                 </p>
+
                 <a 
                   href="https://docs.google.com/forms/d/e/1FAIpQLSdRLWcQG1wMr5oPaoHtl7CYPyS1CR4uaeVUpYKRC9eS_y_2ug/viewform?usp=header"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest text-[#E6A26C] hover:text-white transition-colors py-1"
+                  className="w-full bg-[#E6A26C] text-[#0F1611] font-bold text-xs uppercase tracking-widest py-4 px-6 rounded-xl hover:bg-white transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2"
                 >
-                  Upload Registration Photo Here <ExternalLink className="w-3.5 h-3.5" />
+                  Register Here <ExternalLink className="w-4 h-4" />
                 </a>
               </div>
-
-              <button 
-                type="button" 
-                className="w-full bg-[#E6A26C] text-[#0F1611] font-bold text-xs uppercase tracking-widest py-4 rounded-xl hover:bg-white transition-colors mt-2"
-              >
-                Submit Application
-              </button>
-            </form>
+            </div>
 
           </div>
         </motion.div>

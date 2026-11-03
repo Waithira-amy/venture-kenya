@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
+import { ExternalLink } from "lucide-react";
 
 export default function RegisterForm() {
   return (
     <section id="register" className="relative pt-4 pb-20 bg-[#FCFCFA] z-10 px-6">
-      {/* Changed to max-w-4xl and added mx-auto to center the narrower box */}
       <div className="max-w-4xl mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: 20 }} 
@@ -25,7 +25,7 @@ export default function RegisterForm() {
               </p>
             </div>
 
-            {/* Right Column: Form Inputs */}
+            {/* Right Column: Form Inputs & Upload Link */}
             <form className="flex flex-col gap-5">
               <input 
                 type="text" 
@@ -44,13 +44,32 @@ export default function RegisterForm() {
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-sm outline-none focus:border-[#E6A26C] transition-colors text-white placeholder-white/40"
                 />
               </div>
-              <select className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-sm outline-none focus:border-[#E6A26C] transition-colors text-white/40 appearance-none">
-                <option value="" disabled selected>Select Category</option>
+              <select 
+                defaultValue="" 
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-sm outline-none focus:border-[#E6A26C] transition-colors text-white/40 appearance-none"
+              >
+                <option value="" disabled>Select Category</option>
                 <option value="model" className="text-black">Model / Actor</option>
                 <option value="makeup" className="text-black">Makeup Artist</option>
                 <option value="fashion" className="text-black">Fashion Designer</option>
                 <option value="photo_video" className="text-black">Photographer / Videographer</option>
               </select>
+
+              {/* Google Form Upload Link Box */}
+              <div className="bg-white/5 border border-white/10 rounded-xl p-4 flex flex-col gap-2">
+                <p className="text-xs text-[#FCFCFA]/70">
+                  
+                </p>
+                <a 
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSdRLWcQG1wMr5oPaoHtl7CYPyS1CR4uaeVUpYKRC9eS_y_2ug/viewform?usp=header"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 text-xs font-bold uppercase tracking-widest text-[#E6A26C] hover:text-white transition-colors py-1"
+                >
+                  Upload Registration Photo Here <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+
               <button 
                 type="button" 
                 className="w-full bg-[#E6A26C] text-[#0F1611] font-bold text-xs uppercase tracking-widest py-4 rounded-xl hover:bg-white transition-colors mt-2"

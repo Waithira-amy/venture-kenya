@@ -51,7 +51,7 @@ export async function POST(req: Request) {
       BusinessShortCode: shortcode,
       Password: password,
       Timestamp: timestamp,
-      TransactionType: "CustomerPayBillOnline", // Change to 'CustomerBuyGoodsOnline' if using a till number
+      TransactionType: "CustomerBuyGoodsOnline", // Updated for Till Numbers
       Amount: Math.ceil(amount),
       PartyA: formattedPhone,
       PartyB: shortcode,

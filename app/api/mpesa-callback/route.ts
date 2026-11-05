@@ -5,7 +5,11 @@ export async function POST(req: Request) {
     const data = await req.json();
     
     // Safaricom wraps the response inside Body.stkCallback
-    const callbackData = data.Body.stkCallback;
+    const callbackData = data?.Body?.stkCallback;
+
+    if (!callbackData) {
+        return NextResponse.json({ success: false, error: "Invalid callback data" }, { status: 400 });
+    }
 
     if (callbackData.ResultCode === 0) {
       // Payment was SUCCESSFUL
@@ -16,12 +20,12 @@ export async function POST(req: Request) {
       const mpesaReceiptNumber = callbackMetadata.find((item: any) => item.Name === "MpesaReceiptNumber")?.Value;
       const phoneNumber = callbackMetadata.find((item: any) => item.Name === "PhoneNumber")?.Value;
 
-      // TODO: Save this successful transaction to your database here
-      console.log(`Payment Success! Receipt: ${mpesaReceiptNumber}, Amount: ${amount}, Phone: ${phoneNumber}`);
+      // Log successful transaction
+      console.log(`[VENTURE KENYA DONATION] Success! Receipt: ${mpesaReceiptNumber}, Amount: KES ${amount}, Phone: ${phoneNumber}`);
       
     } else {
       // Payment FAILED or was CANCELLED by the user
-      console.log(`Payment Failed: ${callbackData.ResultDesc}`);
+      console.log(`[VENTURE KENYA DONATION] Failed: ${callbackData.ResultDesc}`);
     }
 
     // You MUST return a successful response to Safaricom so they stop retrying

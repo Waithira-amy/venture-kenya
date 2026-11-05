@@ -23,10 +23,16 @@ export async function POST(req: Request) {
     const shortcode = process.env.MPESA_SHORTCODE;
     const callbackUrl = process.env.MPESA_CALLBACK_URL;
 
-    // 1. Get Access Token
+    if (!consumerKey || !consumerSecret || !passkey || !shortcode || !callbackUrl) {
+       console.error("Missing M-Pesa environment variables");
+       return NextResponse.json({ success: false, error: "Server configuration error" }, { status: 500 });
+    }
+
+    // 1. Get Access Token (LIVE URL)
     const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString("base64");
-    const tokenRes = await fetch("https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials", {
+    const tokenRes = await fetch("https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials", {
       headers: { Authorization: `Basic ${auth}` },
+      cache: 'no-store'
     });
     
     if (!tokenRes.ok) {
@@ -40,12 +46,12 @@ export async function POST(req: Request) {
     const timestamp = new Date().toISOString().replace(/[^0-9]/g, "").slice(0, -3);
     const password = Buffer.from(`${shortcode}${passkey}${timestamp}`).toString("base64");
 
-    // 3. Initiate STK Push
+    // 3. Initiate STK Push (LIVE URL)
     const stkPayload = {
       BusinessShortCode: shortcode,
       Password: password,
       Timestamp: timestamp,
-      TransactionType: "CustomerPayBillOnline", // Use 'CustomerBuyGoodsOnline' if it's a Buy Goods till
+      TransactionType: "CustomerPayBillOnline", // Change to 'CustomerBuyGoodsOnline' if using a till number
       Amount: Math.ceil(amount),
       PartyA: formattedPhone,
       PartyB: shortcode,
@@ -55,7 +61,7 @@ export async function POST(req: Request) {
       TransactionDesc: description || "Donation to Venture Kenya",
     };
 
-    const stkRes = await fetch("https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest", {
+    const stkRes = await fetch("https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,

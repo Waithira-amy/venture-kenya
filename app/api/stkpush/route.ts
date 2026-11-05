@@ -1,81 +1,89 @@
 import { NextResponse } from "next/server";
 
-export const dynamic = "force-dynamic";
-
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { phone, amount, reference, description } = body;
 
-    let formattedPhone = phone.replace(/\s+/g, "");
-    if (formattedPhone.startsWith("0")) {
-      formattedPhone = `254${formattedPhone.substring(1)}`;
-    } else if (formattedPhone.startsWith("+")) {
-      formattedPhone = formattedPhone.substring(1);
+    if (!phone || !amount) {
+      return NextResponse.json({ success: false, error: "Phone and amount are required" }, { status: 400 });
     }
 
-    const auth = Buffer.from(`${process.env.MPESA_CONSUMER_KEY}:${process.env.MPESA_CONSUMER_SECRET}`).toString("base64");
+    // Format phone number to 254...
+    let formattedPhone = phone.trim();
+    if (formattedPhone.startsWith("0")) {
+      formattedPhone = "254" + formattedPhone.slice(1);
+    } else if (formattedPhone.startsWith("+")) {
+      formattedPhone = formattedPhone.slice(1);
+    }
+
+    const consumerKey = process.env.MPESA_CONSUMER_KEY;
+    const consumerSecret = process.env.MPESA_CONSUMER_SECRET;
+    const passkey = process.env.MPESA_PASSKEY;
     
-    const oauthUrl = "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials";
-    
-    const tokenResponse = await fetch(oauthUrl, {
+    // For Buy Goods: SHORTCODE is the Store Number, TILL_NUMBER is the public Till
+    const shortcode = process.env.MPESA_SHORTCODE; 
+    const tillNumber = process.env.MPESA_TILL_NUMBER || shortcode; 
+    const callbackUrl = process.env.MPESA_CALLBACK_URL;
+
+    if (!consumerKey || !consumerSecret || !passkey || !shortcode || !callbackUrl) {
+       console.error("Missing M-Pesa environment variables");
+       return NextResponse.json({ success: false, error: "Server configuration error" }, { status: 500 });
+    }
+
+    // 1. Get Access Token (LIVE URL)
+    const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString("base64");
+    const tokenRes = await fetch("https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials", {
       headers: { Authorization: `Basic ${auth}` },
-      cache: "no-store", 
+      cache: 'no-store'
     });
     
-    const tokenData = await tokenResponse.json();
-    
-    if (!tokenResponse.ok || !tokenData.access_token) {
-      console.error("Safaricom Auth Error:", tokenData);
-      return NextResponse.json({ success: false, error: "Safaricom Auth Failed." }, { status: 401 });
+    if (!tokenRes.ok) {
+      throw new Error("Failed to get M-Pesa access token");
     }
     
+    const tokenData = await tokenRes.json();
     const accessToken = tokenData.access_token;
-    const timestamp = new Date().toISOString().replace(/[^0-9]/g, "").slice(0, 14);
-    const passkey = process.env.MPESA_PASSKEY!;
-    
-    const storeNumber = process.env.MPESA_STORE_NUMBER || process.env.MPESA_SHORTCODE!;
-    const tillNumber = process.env.MPESA_TILL_NUMBER || process.env.MPESA_SHORTCODE!;
-    const password = Buffer.from(`${storeNumber}${passkey}${timestamp}`).toString("base64");
 
-    const callbackUrl = process.env.MPESA_CALLBACK_URL || "https://venturekenya.co.ke/api/mpesa-callback";
+    // 2. Prepare STK Push Password & Timestamp
+    // The password MUST be generated using the STORE NUMBER (shortcode), not the Till Number
+    const timestamp = new Date().toISOString().replace(/[^0-9]/g, "").slice(0, -3);
+    const password = Buffer.from(`${shortcode}${passkey}${timestamp}`).toString("base64");
 
+    // 3. Initiate STK Push (LIVE URL)
     const stkPayload = {
-      BusinessShortCode: storeNumber,
+      BusinessShortCode: shortcode,      // Must be the Store Number
       Password: password,
       Timestamp: timestamp,
-      TransactionType: "CustomerBuyGoodsOnline",
-      Amount: Math.round(Number(amount)),
+      TransactionType: "CustomerBuyGoodsOnline", 
+      Amount: Math.ceil(amount),
       PartyA: formattedPhone,
-      PartyB: tillNumber,
+      PartyB: tillNumber,                // Must be the Till Number
       PhoneNumber: formattedPhone,
       CallBackURL: callbackUrl,
-      AccountReference: reference || "Venture Kenya",
-      TransactionDesc: description || "Friends of Kenya Donation",
+      AccountReference: reference || "VentureKenya",
+      TransactionDesc: description || "Donation to Venture Kenya",
     };
 
-    const stkUrl = process.env.MPESA_STKPUSH_URL || "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
-
-    const stkResponse = await fetch(stkUrl, {
+    const stkRes = await fetch("https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
-      cache: "no-store",
       body: JSON.stringify(stkPayload),
     });
 
-    const stkData = await stkResponse.json();
+    const stkData = await stkRes.json();
 
     if (stkData.ResponseCode === "0") {
-      return NextResponse.json({ success: true, message: "STK Push sent to phone" });
+      return NextResponse.json({ success: true, data: stkData });
     } else {
-      console.error("STK Push Failed:", stkData);
-      return NextResponse.json({ success: false, error: stkData.errorMessage || stkData.CustomerMessage }, { status: 400 });
+      return NextResponse.json({ success: false, error: stkData.errorMessage || "STK Push failed" }, { status: 400 });
     }
-  } catch (error) {
-    console.error("STK Push Exception:", error);
+
+  } catch (error: any) {
+    console.error("STK Push Error:", error);
     return NextResponse.json({ success: false, error: "Internal Server Error" }, { status: 500 });
   }
 }

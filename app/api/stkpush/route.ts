@@ -38,7 +38,6 @@ export async function POST(req: Request) {
     const tillNumber = process.env.MPESA_TILL_NUMBER || process.env.MPESA_SHORTCODE!;
     const password = Buffer.from(`${storeNumber}${passkey}${timestamp}`).toString("base64");
 
-    // Pointing strictly to your Venture Kenya domain and mpesa-callback route
     const callbackUrl = process.env.MPESA_CALLBACK_URL || "https://venturekenya.co.ke/api/mpesa-callback";
 
     const stkPayload = {

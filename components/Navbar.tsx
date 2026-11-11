@@ -39,6 +39,7 @@ export default function Navbar() {
         {/* Desktop Links (Hidden on Mobile) */}
         <div className="hidden md:flex items-center gap-8 text-[11px] font-bold uppercase tracking-[0.15em] text-[#FCFCFA]/80">
           <button onClick={() => scrollToSection('about')} className="hover:text-[#E6A26C] transition-colors">About</button>
+          <button onClick={() => scrollToSection('team')} className="hover:text-[#E6A26C] transition-colors">Team</button>
           <button onClick={() => scrollToSection('culture-shoot')} className="hover:text-[#E6A26C] transition-colors">Programme</button>
           <button onClick={() => scrollToSection('voting')} className="hover:text-[#E6A26C] transition-colors">Voting</button>
           <Link 
@@ -69,6 +70,9 @@ export default function Navbar() {
             >
               <button onClick={() => scrollToSection('about')} className="text-[#FCFCFA] text-xs font-bold uppercase tracking-widest text-left hover:text-[#E6A26C] transition-colors">
                 About
+              </button>
+              <button onClick={() => scrollToSection('team')} className="text-[#FCFCFA] text-xs font-bold uppercase tracking-widest text-left hover:text-[#E6A26C] transition-colors">
+                Team
               </button>
               <button onClick={() => scrollToSection('culture-shoot')} className="text-[#FCFCFA] text-xs font-bold uppercase tracking-widest text-left hover:text-[#E6A26C] transition-colors">
                 Programme

@@ -53,17 +53,17 @@ export default function MeetTheTeam() {
           </p>
         </div>
 
-        {/* Team Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-16">
+        {/* Flex Layout for perfectly centered wrapping */}
+        <div className="flex flex-wrap justify-center gap-x-8 gap-y-16 md:gap-x-12">
           {TEAM_MEMBERS.map((member) => (
-            <div key={member.id} className="flex flex-col items-center group">
+            <div key={member.id} className="flex flex-col items-center group w-full sm:w-[calc(50%-2rem)] lg:w-[calc(33.333%-3rem)] max-w-[320px]">
               
               {/* Avatar Box */}
               <div className="relative w-48 h-48 md:w-56 md:h-56 mb-6 rounded-full overflow-hidden border-2 border-[#df9a74]/20 bg-[#1a1a1a] shadow-lg group-hover:border-[#df9a74]/60 transition-colors duration-500">
                 <img 
                   src={member.image} 
                   alt={member.name}
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                  className="w-full h-full object-cover object-center transform group-hover:scale-110 transition-transform duration-700"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                     const fallback = e.currentTarget.nextElementSibling as HTMLElement;
@@ -83,11 +83,11 @@ export default function MeetTheTeam() {
               </div>
 
               {/* Text Details */}
-              <div className="text-center px-4">
+              <div className="text-center px-4 w-full">
                 <h3 className="text-xl font-serif text-white mb-2 group-hover:text-[#df9a74] transition-colors">
                   {member.name}
                 </h3>
-                <p className="text-xs uppercase tracking-widest text-[#df9a74] font-semibold mb-2">
+                <p className="text-xs uppercase tracking-widest text-[#df9a74] font-semibold mb-2 leading-relaxed">
                   {member.role}
                 </p>
                 <div className="w-8 h-px bg-slate-700 mx-auto mt-4 group-hover:bg-[#df9a74]/50 transition-colors" />

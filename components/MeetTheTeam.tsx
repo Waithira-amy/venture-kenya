@@ -35,7 +35,7 @@ const TEAM_MEMBERS = [
   },
   {
     id: 6,
-    name: "Name Coming Soon",
+    name: " Director Ray",
     role: "Lead D.O.P & Graphics",
     image: "/team/DOP.jpg",
   }

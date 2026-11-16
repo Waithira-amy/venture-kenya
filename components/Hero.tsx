@@ -115,7 +115,7 @@ export default function Hero() {
   };
 
   return (
-    <section id="hero" className="relative min-h-[100vh] flex flex-col justify-center pt-40 md:pt-32 pb-20 bg-[#0F1611] overflow-hidden">
+    <section id="hero" className="relative min-h-[100vh] flex flex-col justify-end pt-28 pb-10 md:pb-16 bg-[#0F1611] overflow-hidden">
       {/* Background Video - 100% Clear */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <video
@@ -128,49 +128,50 @@ export default function Hero() {
         >
           <source src="/video-hero.mp4" type="video/mp4" />
         </video>
+        <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-[#0F1611] via-[#0F1611]/55 to-transparent" />
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 w-full flex flex-col justify-center h-full pb-32 md:pb-0">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}
-          className="w-fit inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/20 bg-black/40 backdrop-blur-md mb-8"
-        >
-          <span className="w-2 h-2 rounded-full bg-[#E6A26C] animate-pulse" />
-          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#FCFCFA]">Creative Tourism Platform</span>
-        </motion.div>
-
+      {/* Main Editorial Content - Scaled 20% Smaller */}
+      <div className="relative z-10 max-w-5xl mx-auto px-6 w-full">
         <motion.h1 
-          initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}
-          className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-[#FCFCFA] leading-[1.05] tracking-tight mb-8 drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]"
+          initial={{ opacity: 0, y: 24 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.85, delay: 0.2 }}
+          className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-[4.2rem] font-bold text-[#FCFCFA] leading-[1.04] tracking-tight drop-shadow-[0_6px_24px_rgba(0,0,0,0.85)]"
         >
-          Discover Kenya.<br />
-          <span className="text-[#E6A26C] italic font-light">Experience</span> Heritage.
+          Discover Kenya.
+          <span className="block mt-1">
+            <span className="text-[#E6A26C] italic font-light">Experience</span>{" "}
+            Heritage.
+          </span>
         </motion.h1>
 
         <motion.div 
-          initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-col lg:flex-row lg:items-end justify-between gap-10 border-t-0 md:border-t md:border-white/30 pt-4 md:pt-10 mt-8 md:mt-10"
+          initial={{ opacity: 0, y: 20 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.85, delay: 0.4 }}
+          className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-t border-white/20 pt-6 mt-6 md:mt-8"
         >
-          <p className="text-base md:text-lg text-[#FCFCFA] max-w-xl font-normal leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+          <p className="text-sm md:text-[15px] text-[#FCFCFA]/95 max-w-md font-light leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
             A digital platform dedicated to showcasing Kenya's cultural diversity, historical landmarks, and creative talent to the world.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="group w-full sm:w-auto flex items-center justify-center gap-3 bg-black/40 border border-white/40 hover:bg-black/60 text-[#FCFCFA] px-8 py-4 rounded-full font-bold text-xs uppercase tracking-widest transition-all duration-300 ease-out backdrop-blur-md"
+              className="group flex items-center justify-center gap-2.5 bg-[#0F1611]/60 hover:bg-[#0F1611]/85 border border-white/25 hover:border-[#E6A26C]/70 text-[#FCFCFA] px-5 py-3 rounded-full font-bold text-[10px] uppercase tracking-[0.16em] transition-all duration-300 backdrop-blur-md shadow-lg"
             >
-              <Heart className="w-4 h-4 text-[#E6A26C] group-hover:scale-110 transition-transform" />
-              Friends of Kenya
+              <Heart className="w-3.5 h-3.5 text-[#E6A26C] group-hover:scale-110 transition-transform" />
+              <span>Friends of Kenya</span>
             </button>
             
             <Link 
               href="/register"
-              className="group w-full sm:w-auto flex items-center justify-between gap-6 bg-[#E6A26C] hover:bg-[#FCFCFA] text-[#0F1611] px-8 py-4 rounded-full font-bold text-xs uppercase tracking-widest transition-all duration-300 ease-out hover:scale-105 hover:shadow-[0_0_30px_rgba(230,162,108,0.4)]"
+              className="group flex items-center justify-between sm:justify-center gap-4 bg-[#E6A26C] hover:bg-[#FCFCFA] text-[#0F1611] pl-6 pr-2.5 py-2 rounded-full font-bold text-[10px] uppercase tracking-[0.16em] transition-all duration-300 hover:scale-[1.03] shadow-[0_10px_30px_rgba(230,162,108,0.35)]"
             >
-              Register Talent
-              <div className="bg-[#0F1611]/10 p-2 rounded-full group-hover:-rotate-45 transition-transform duration-300 ease-out">
-                <ArrowDownRight className="w-4 h-4" />
+              <span>Register Talent</span>
+              <div className="bg-[#0F1611] text-[#FCFCFA] group-hover:bg-[#E6A26C] group-hover:text-[#0F1611] p-2 rounded-full group-hover:-rotate-45 transition-all duration-300">
+                <ArrowDownRight className="w-3.5 h-3.5" />
               </div>
             </Link>
           </div>

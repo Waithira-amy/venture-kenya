@@ -126,7 +126,7 @@ export default function Hero() {
           poster="/viva-americana-_pfAO4mz-RY-unsplash.jpg"
           className="w-full h-full object-cover object-center"
         >
-          <source src="/hero-video.mp4" type="video/mp4" />
+          <source src="/video-hero.mp4" type="video/mp4" />
         </video>
       </div>
 

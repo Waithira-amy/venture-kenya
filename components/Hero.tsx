@@ -116,7 +116,7 @@ export default function Hero() {
 
   return (
     <section id="hero" className="relative min-h-[100vh] flex flex-col justify-center pt-40 md:pt-32 pb-20 bg-[#0F1611] overflow-hidden">
-      {/* Background Video */}
+      {/* Background Video - 100% Clear */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <video
           autoPlay
@@ -124,17 +124,16 @@ export default function Hero() {
           muted
           playsInline
           poster="/viva-americana-_pfAO4mz-RY-unsplash.jpg"
-          className="w-full h-full object-cover object-center opacity-80"
+          className="w-full h-full object-cover object-center"
         >
           <source src="/hero-video.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0F1611]/40 via-[#0F1611]/70 to-[#0F1611]" />
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-6 w-full flex flex-col justify-center h-full pb-32 md:pb-0">
         <motion.div 
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }}
-          className="w-fit inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/20 bg-black/30 backdrop-blur-md mb-8"
+          className="w-fit inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/20 bg-black/40 backdrop-blur-md mb-8"
         >
           <span className="w-2 h-2 rounded-full bg-[#E6A26C] animate-pulse" />
           <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#FCFCFA]">Creative Tourism Platform</span>
@@ -142,24 +141,24 @@ export default function Hero() {
 
         <motion.h1 
           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }}
-          className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-[#FCFCFA] leading-[1.05] tracking-tight mb-8"
+          className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-[#FCFCFA] leading-[1.05] tracking-tight mb-8 drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]"
         >
           Discover Kenya.<br />
-          <span className="text-[#E6A26C] italic font-light drop-shadow-lg">Experience</span> Heritage.
+          <span className="text-[#E6A26C] italic font-light">Experience</span> Heritage.
         </motion.h1>
 
         <motion.div 
           initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }}
-          className="flex flex-col lg:flex-row lg:items-end justify-between gap-10 border-t-0 md:border-t md:border-white/20 pt-4 md:pt-10 mt-8 md:mt-10"
+          className="flex flex-col lg:flex-row lg:items-end justify-between gap-10 border-t-0 md:border-t md:border-white/30 pt-4 md:pt-10 mt-8 md:mt-10"
         >
-          <p className="text-base md:text-lg text-[#FCFCFA]/90 max-w-xl font-light leading-relaxed drop-shadow-md">
+          <p className="text-base md:text-lg text-[#FCFCFA] max-w-xl font-normal leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
             A digital platform dedicated to showcasing Kenya's cultural diversity, historical landmarks, and creative talent to the world.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="group w-full sm:w-auto flex items-center justify-center gap-3 bg-transparent border border-white/30 hover:bg-white/10 text-[#FCFCFA] px-8 py-4 rounded-full font-bold text-xs uppercase tracking-widest transition-all duration-300 ease-out backdrop-blur-sm"
+              className="group w-full sm:w-auto flex items-center justify-center gap-3 bg-black/40 border border-white/40 hover:bg-black/60 text-[#FCFCFA] px-8 py-4 rounded-full font-bold text-xs uppercase tracking-widest transition-all duration-300 ease-out backdrop-blur-md"
             >
               <Heart className="w-4 h-4 text-[#E6A26C] group-hover:scale-110 transition-transform" />
               Friends of Kenya

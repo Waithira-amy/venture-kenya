@@ -115,29 +115,45 @@ export default function Hero() {
   };
 
   return (
-    <section id="hero" className="relative min-h-screen min-h-[100svh] flex flex-col justify-end pt-28 pb-24 sm:pb-20 md:pb-16 bg-[#0F1611] overflow-hidden">
-      {/* Background Video - 100% Clear */}
+    <section
+      id="hero"
+      className="relative min-h-screen min-h-[100svh] flex flex-col justify-center md:justify-end pt-24 pb-20 sm:pb-24 md:pt-28 md:pb-16 bg-[#0F1611] overflow-hidden"
+    >
+      {/* Background Video Only */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <video
           autoPlay
           loop
           muted
           playsInline
-          poster="/viva-americana-_pfAO4mz-RY-unsplash.jpg"
+          preload="auto"
           className="w-full h-full object-cover object-center"
         >
           <source src="/video-hero.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-x-0 bottom-0 h-[58%] md:h-[45%] bg-gradient-to-t from-[#0F1611] via-[#0F1611]/60 to-transparent" />
+
+        {/* Subtle Top Vignette for Floating Navbar Contrast */}
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#0F1611]/50 to-transparent" />
+
+        {/* Smooth Bottom Horizon Blend */}
+        <div className="absolute inset-x-0 bottom-0 h-[72%] md:h-[45%] bg-gradient-to-t from-[#0F1611] via-[#0F1611]/65 to-transparent" />
       </div>
 
       {/* Main Editorial Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 w-full">
-        <motion.h1 
-          initial={{ opacity: 0, y: 24 }} 
-          animate={{ opacity: 1, y: 0 }} 
+        {/* Minimal Editorial Gold Accent Bar */}
+        <motion.div
+          initial={{ opacity: 0, scaleX: 0 }}
+          animate={{ opacity: 1, scaleX: 1 }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="origin-left w-10 h-[2px] bg-[#E6A26C] mb-4 rounded-full shadow-[0_0_12px_rgba(230,162,108,0.65)]"
+        />
+
+        <motion.h1
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.85, delay: 0.2 }}
-          className="font-serif text-[2.25rem] sm:text-5xl md:text-6xl lg:text-[4.2rem] font-bold text-[#FCFCFA] leading-[1.06] tracking-tight drop-shadow-[0_6px_24px_rgba(0,0,0,0.85)]"
+          className="font-serif text-[2.35rem] sm:text-5xl md:text-6xl lg:text-[4.2rem] font-bold text-[#FCFCFA] leading-[1.06] tracking-tight drop-shadow-[0_6px_24px_rgba(0,0,0,0.85)]"
         >
           Discover Kenya.
           <span className="block mt-1">
@@ -146,28 +162,36 @@ export default function Hero() {
           </span>
         </motion.h1>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          transition={{ duration: 0.85, delay: 0.4 }}
-          className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 md:gap-6 border-t border-white/20 pt-5 md:pt-6 mt-5 md:mt-8"
+        {/* Gold-to-White Gradient Hairline Divider */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.85, delay: 0.35 }}
+          className="h-px w-full bg-gradient-to-r from-[#E6A26C]/60 via-white/25 to-transparent my-5 md:my-7"
+        />
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.85, delay: 0.45 }}
+          className="flex flex-col lg:flex-row lg:items-center justify-between gap-6"
         >
-          <p className="text-[13px] sm:text-sm md:text-[15px] text-[#FCFCFA]/95 max-w-md font-light leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+          <p className="text-[13.5px] sm:text-sm md:text-[15px] text-[#FCFCFA]/95 max-w-md font-light leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
             A digital platform dedicated to showcasing Kenya's cultural diversity, historical landmarks, and creative talent to the world.
           </p>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0 pt-1 sm:pt-0">
-            <button 
+            <button
               onClick={() => setIsModalOpen(true)}
-              className="group w-[220px] sm:w-auto flex items-center justify-center gap-2.5 bg-[#0F1611]/65 hover:bg-[#0F1611]/85 border border-white/25 hover:border-[#E6A26C]/70 text-[#FCFCFA] px-5 py-3 rounded-full font-bold text-[10px] uppercase tracking-[0.16em] transition-all duration-300 backdrop-blur-md shadow-lg"
+              className="group w-[225px] sm:w-auto flex items-center justify-center gap-2.5 bg-[#0F1611]/60 hover:bg-[#0F1611]/85 active:scale-[0.98] border border-white/30 hover:border-[#E6A26C]/80 text-[#FCFCFA] px-5 py-3.5 sm:py-3 rounded-full font-bold text-[10px] uppercase tracking-[0.18em] transition-all duration-300 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.4)]"
             >
               <Heart className="w-3.5 h-3.5 text-[#E6A26C] group-hover:scale-110 transition-transform" />
               <span>Friends of Kenya</span>
             </button>
-            
-            <Link 
+
+            <Link
               href="/register"
-              className="group w-[220px] sm:w-auto flex items-center justify-between sm:justify-center gap-4 bg-[#E6A26C] hover:bg-[#FCFCFA] text-[#0F1611] pl-6 pr-2.5 py-2 rounded-full font-bold text-[10px] uppercase tracking-[0.16em] transition-all duration-300 hover:scale-[1.03] shadow-[0_10px_30px_rgba(230,162,108,0.35)]"
+              className="group w-[225px] sm:w-auto flex items-center justify-between sm:justify-center gap-4 bg-[#E6A26C] hover:bg-[#FCFCFA] active:scale-[0.98] text-[#0F1611] pl-6 pr-2 py-2 rounded-full font-bold text-[10px] uppercase tracking-[0.18em] transition-all duration-300 hover:scale-[1.03] shadow-[0_10px_30px_rgba(230,162,108,0.4)]"
             >
               <span>Register Talent</span>
               <div className="bg-[#0F1611] text-[#FCFCFA] group-hover:bg-[#E6A26C] group-hover:text-[#0F1611] p-2 rounded-full group-hover:-rotate-45 transition-all duration-300">
@@ -181,20 +205,20 @@ export default function Hero() {
       {/* Friends of Kenya Modal */}
       <AnimatePresence>
         {isModalOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0F1611]/80 backdrop-blur-md"
           >
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ duration: 0.2 }}
               className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-[#FCFCFA] rounded-3xl shadow-2xl flex flex-col md:flex-row"
             >
-              <button 
+              <button
                 onClick={closeModal}
                 className="absolute top-4 right-4 z-50 text-slate-400 hover:text-slate-900 bg-white/90 p-2 rounded-full border border-slate-200 transition-colors shadow-sm"
               >
@@ -211,7 +235,7 @@ export default function Hero() {
                 <p className="text-xs md:text-sm text-white/70 mb-6 font-light relative z-10">
                   Your support funds cultural preservation, local excursions, and the Kenya Culture Shoot initiative.
                 </p>
-                
+
                 <div className="space-y-4 relative z-10">
                   <div className="flex items-start gap-3.5">
                     <div className="p-2 rounded-full bg-white/5 shrink-0">
@@ -243,8 +267,8 @@ export default function Hero() {
                     </div>
                     <h3 className="text-2xl font-bold font-serif text-slate-900 mb-2">Thank You!</h3>
                     <p className="text-sm text-slate-500 font-medium leading-relaxed max-w-xs mx-auto">
-                      {paymentMethod === "mpesa" 
-                        ? "An M-Pesa prompt has been sent to your phone to complete the donation." 
+                      {paymentMethod === "mpesa"
+                        ? "An M-Pesa prompt has been sent to your phone to complete the donation."
                         : "Your donation has been successfully processed."}
                     </p>
                     <button onClick={closeModal} className="mt-8 text-xs font-bold uppercase tracking-widest text-[#E6A26C] hover:text-[#0F1611] transition-colors">
@@ -287,7 +311,6 @@ export default function Hero() {
                       </motion.div>
                     ) : (
                       <motion.form initial={{ opacity: 0 }} animate={{ opacity: 1 }} onSubmit={handleDonateSubmit} className="space-y-5 md:space-y-6">
-                        
                         <div>
                           <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
                             Payment Method
@@ -335,8 +358,8 @@ export default function Hero() {
                               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-400">
                                 {paymentMethod === "mpesa" ? "KES" : (cardCurrency === "USD" ? "$" : "KES")}
                               </span>
-                              <input 
-                                type="number" 
+                              <input
+                                type="number"
                                 min="1"
                                 value={amount}
                                 onChange={(e) => setAmount(e.target.value)}
@@ -351,8 +374,8 @@ export default function Hero() {
                               <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">
                                 Phone Number
                               </label>
-                              <input 
-                                type="tel" 
+                              <input
+                                type="tel"
                                 placeholder="0712345678"
                                 value={phoneNumber}
                                 onChange={(e) => setPhoneNumber(e.target.value)}
@@ -365,8 +388,8 @@ export default function Hero() {
                               <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">
                                 Email Address
                               </label>
-                              <input 
-                                type="email" 
+                              <input
+                                type="email"
                                 placeholder="Email for receipt"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -381,8 +404,8 @@ export default function Hero() {
                           type="submit"
                           disabled={isProcessing}
                           className={`w-full py-4 rounded-xl text-white font-bold text-xs uppercase tracking-widest transition-all shadow-lg mt-2 flex items-center justify-center gap-2 ${
-                            paymentMethod === "mpesa" 
-                              ? "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/20" 
+                            paymentMethod === "mpesa"
+                              ? "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/20"
                               : "bg-[#E6A26C] hover:bg-[#d9915a] shadow-[#E6A26C]/20 text-[#0F1611]"
                           }`}
                         >
@@ -399,7 +422,6 @@ export default function Hero() {
                   </>
                 )}
               </div>
-
             </motion.div>
           </motion.div>
         )}

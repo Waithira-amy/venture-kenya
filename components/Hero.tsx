@@ -119,24 +119,24 @@ export default function Hero() {
       id="hero"
       className="relative min-h-screen min-h-[100svh] flex flex-col justify-center md:justify-end pt-24 pb-20 sm:pb-24 md:pt-28 md:pb-16 bg-[#0F1611] overflow-hidden"
     >
-      {/* Background Video Only */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
+      {/* Background Video - Isolated GPU Layer for Mobile Sharpness */}
+      <div className="absolute inset-0 z-0 pointer-events-none transform-gpu">
         <video
           autoPlay
           loop
           muted
           playsInline
           preload="auto"
-          className="w-full h-full object-cover object-center"
+          className="w-full h-full object-cover object-center transform-gpu [backface-visibility:hidden]"
         >
           <source src="/video-hero.mp4" type="video/mp4" />
         </video>
 
         {/* Subtle Top Vignette for Floating Navbar Contrast */}
-        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#0F1611]/50 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-24 md:h-32 bg-gradient-to-b from-[#0F1611]/40 to-transparent" />
 
-        {/* Smooth Bottom Horizon Blend */}
-        <div className="absolute inset-x-0 bottom-0 h-[72%] md:h-[45%] bg-gradient-to-t from-[#0F1611] via-[#0F1611]/65 to-transparent" />
+        {/* Tighter Bottom Horizon Blend so the Sunset Stays Vivid */}
+        <div className="absolute inset-x-0 bottom-0 h-[52%] md:h-[45%] bg-gradient-to-t from-[#0F1611] via-[#0F1611]/55 to-transparent" />
       </div>
 
       {/* Main Editorial Content */}
@@ -153,7 +153,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.85, delay: 0.2 }}
-          className="font-serif text-[2.35rem] sm:text-5xl md:text-6xl lg:text-[4.2rem] font-bold text-[#FCFCFA] leading-[1.06] tracking-tight drop-shadow-[0_6px_24px_rgba(0,0,0,0.85)]"
+          className="font-serif text-[2.35rem] sm:text-5xl md:text-6xl lg:text-[4.2rem] font-bold text-[#FCFCFA] leading-[1.06] tracking-tight drop-shadow-[0_6px_24px_rgba(0,0,0,0.9)]"
         >
           Discover Kenya.
           <span className="block mt-1">
@@ -176,14 +176,14 @@ export default function Hero() {
           transition={{ duration: 0.85, delay: 0.45 }}
           className="flex flex-col lg:flex-row lg:items-center justify-between gap-6"
         >
-          <p className="text-[13.5px] sm:text-sm md:text-[15px] text-[#FCFCFA]/95 max-w-md font-light leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+          <p className="text-[13.5px] sm:text-sm md:text-[15px] text-[#FCFCFA]/95 max-w-md font-light leading-relaxed drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)]">
             A digital platform dedicated to showcasing Kenya's cultural diversity, historical landmarks, and creative talent to the world.
           </p>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0 pt-1 sm:pt-0">
             <button
               onClick={() => setIsModalOpen(true)}
-              className="group w-[225px] sm:w-auto flex items-center justify-center gap-2.5 bg-[#0F1611]/60 hover:bg-[#0F1611]/85 active:scale-[0.98] border border-white/30 hover:border-[#E6A26C]/80 text-[#FCFCFA] px-5 py-3.5 sm:py-3 rounded-full font-bold text-[10px] uppercase tracking-[0.18em] transition-all duration-300 backdrop-blur-md shadow-[0_8px_24px_rgba(0,0,0,0.4)]"
+              className="group w-[225px] sm:w-auto flex items-center justify-center gap-2.5 bg-[#0F1611]/75 hover:bg-[#0F1611]/90 active:scale-[0.98] border border-white/30 hover:border-[#E6A26C]/80 text-[#FCFCFA] px-5 py-3.5 sm:py-3 rounded-full font-bold text-[10px] uppercase tracking-[0.18em] transition-all duration-300 backdrop-blur-sm shadow-[0_8px_24px_rgba(0,0,0,0.45)]"
             >
               <Heart className="w-3.5 h-3.5 text-[#E6A26C] group-hover:scale-110 transition-transform" />
               <span>Friends of Kenya</span>

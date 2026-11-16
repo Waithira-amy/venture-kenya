@@ -115,7 +115,7 @@ export default function Hero() {
   };
 
   return (
-    <section id="hero" className="relative min-h-[100vh] flex flex-col justify-end pt-28 pb-10 md:pb-16 bg-[#0F1611] overflow-hidden">
+    <section id="hero" className="relative min-h-screen min-h-[100svh] flex flex-col justify-end pt-28 pb-24 sm:pb-20 md:pb-16 bg-[#0F1611] overflow-hidden">
       {/* Background Video - 100% Clear */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <video
@@ -128,16 +128,16 @@ export default function Hero() {
         >
           <source src="/video-hero.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-[#0F1611] via-[#0F1611]/55 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-[58%] md:h-[45%] bg-gradient-to-t from-[#0F1611] via-[#0F1611]/60 to-transparent" />
       </div>
 
-      {/* Main Editorial Content - Scaled 20% Smaller */}
+      {/* Main Editorial Content */}
       <div className="relative z-10 max-w-5xl mx-auto px-6 w-full">
         <motion.h1 
           initial={{ opacity: 0, y: 24 }} 
           animate={{ opacity: 1, y: 0 }} 
           transition={{ duration: 0.85, delay: 0.2 }}
-          className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-[4.2rem] font-bold text-[#FCFCFA] leading-[1.04] tracking-tight drop-shadow-[0_6px_24px_rgba(0,0,0,0.85)]"
+          className="font-serif text-[2.25rem] sm:text-5xl md:text-6xl lg:text-[4.2rem] font-bold text-[#FCFCFA] leading-[1.06] tracking-tight drop-shadow-[0_6px_24px_rgba(0,0,0,0.85)]"
         >
           Discover Kenya.
           <span className="block mt-1">
@@ -150,16 +150,16 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }} 
           animate={{ opacity: 1, y: 0 }} 
           transition={{ duration: 0.85, delay: 0.4 }}
-          className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 border-t border-white/20 pt-6 mt-6 md:mt-8"
+          className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 md:gap-6 border-t border-white/20 pt-5 md:pt-6 mt-5 md:mt-8"
         >
-          <p className="text-sm md:text-[15px] text-[#FCFCFA]/95 max-w-md font-light leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+          <p className="text-[13px] sm:text-sm md:text-[15px] text-[#FCFCFA]/95 max-w-md font-light leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
             A digital platform dedicated to showcasing Kenya's cultural diversity, historical landmarks, and creative talent to the world.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0 pt-1 sm:pt-0">
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="group flex items-center justify-center gap-2.5 bg-[#0F1611]/60 hover:bg-[#0F1611]/85 border border-white/25 hover:border-[#E6A26C]/70 text-[#FCFCFA] px-5 py-3 rounded-full font-bold text-[10px] uppercase tracking-[0.16em] transition-all duration-300 backdrop-blur-md shadow-lg"
+              className="group w-[220px] sm:w-auto flex items-center justify-center gap-2.5 bg-[#0F1611]/65 hover:bg-[#0F1611]/85 border border-white/25 hover:border-[#E6A26C]/70 text-[#FCFCFA] px-5 py-3 rounded-full font-bold text-[10px] uppercase tracking-[0.16em] transition-all duration-300 backdrop-blur-md shadow-lg"
             >
               <Heart className="w-3.5 h-3.5 text-[#E6A26C] group-hover:scale-110 transition-transform" />
               <span>Friends of Kenya</span>
@@ -167,7 +167,7 @@ export default function Hero() {
             
             <Link 
               href="/register"
-              className="group flex items-center justify-between sm:justify-center gap-4 bg-[#E6A26C] hover:bg-[#FCFCFA] text-[#0F1611] pl-6 pr-2.5 py-2 rounded-full font-bold text-[10px] uppercase tracking-[0.16em] transition-all duration-300 hover:scale-[1.03] shadow-[0_10px_30px_rgba(230,162,108,0.35)]"
+              className="group w-[220px] sm:w-auto flex items-center justify-between sm:justify-center gap-4 bg-[#E6A26C] hover:bg-[#FCFCFA] text-[#0F1611] pl-6 pr-2.5 py-2 rounded-full font-bold text-[10px] uppercase tracking-[0.16em] transition-all duration-300 hover:scale-[1.03] shadow-[0_10px_30px_rgba(230,162,108,0.35)]"
             >
               <span>Register Talent</span>
               <div className="bg-[#0F1611] text-[#FCFCFA] group-hover:bg-[#E6A26C] group-hover:text-[#0F1611] p-2 rounded-full group-hover:-rotate-45 transition-all duration-300">
@@ -192,7 +192,7 @@ export default function Hero() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="relative w-full max-w-3xl bg-[#FCFCFA] rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row"
+              className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-[#FCFCFA] rounded-3xl shadow-2xl flex flex-col md:flex-row"
             >
               <button 
                 onClick={closeModal}
@@ -202,40 +202,40 @@ export default function Hero() {
               </button>
 
               {/* Left Info Panel */}
-              <div className="w-full md:w-5/12 bg-[#0F1611] p-8 md:p-10 border-b md:border-b-0 md:border-r border-white/10 flex flex-col justify-center relative overflow-hidden text-[#FCFCFA]">
+              <div className="w-full md:w-5/12 bg-[#0F1611] p-7 md:p-10 border-b md:border-b-0 md:border-r border-white/10 flex flex-col justify-center relative overflow-hidden text-[#FCFCFA]">
                 <div className="absolute top-0 left-0 w-48 h-48 bg-[#E6A26C]/20 rounded-full blur-[80px]" />
-                <Heart className="w-10 h-10 text-[#E6A26C] mb-6 relative z-10" />
-                <h3 className="font-serif text-3xl font-bold mb-4 leading-tight relative z-10">
+                <Heart className="w-9 h-9 text-[#E6A26C] mb-5 relative z-10" />
+                <h3 className="font-serif text-2xl md:text-3xl font-bold mb-3 leading-tight relative z-10">
                   Friends of <br />Kenya
                 </h3>
-                <p className="text-sm text-white/70 mb-8 font-light relative z-10">
+                <p className="text-xs md:text-sm text-white/70 mb-6 font-light relative z-10">
                   Your support funds cultural preservation, local excursions, and the Kenya Culture Shoot initiative.
                 </p>
                 
-                <div className="space-y-5 relative z-10">
-                  <div className="flex items-start gap-4">
+                <div className="space-y-4 relative z-10">
+                  <div className="flex items-start gap-3.5">
                     <div className="p-2 rounded-full bg-white/5 shrink-0">
                       <Globe className="w-4 h-4 text-[#E6A26C]" />
                     </div>
                     <div>
                       <h4 className="text-[11px] font-bold uppercase tracking-widest text-white">Global Impact</h4>
-                      <p className="text-xs text-white/50 mt-1">Accepting donations worldwide via Card & M-Pesa.</p>
+                      <p className="text-xs text-white/50 mt-0.5">Accepting donations worldwide via Card & M-Pesa.</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-4">
+                  <div className="flex items-start gap-3.5">
                     <div className="p-2 rounded-full bg-white/5 shrink-0">
                       <MapPin className="w-4 h-4 text-[#E6A26C]" />
                     </div>
                     <div>
                       <h4 className="text-[11px] font-bold uppercase tracking-widest text-white">Local Growth</h4>
-                      <p className="text-xs text-white/50 mt-1">Directly empowering Kenyan tourism & talent.</p>
+                      <p className="text-xs text-white/50 mt-0.5">Directly empowering Kenyan tourism & talent.</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Right Payment Form */}
-              <div className="w-full md:w-7/12 p-8 md:p-10 relative bg-[#FCFCFA]">
+              <div className="w-full md:w-7/12 p-7 md:p-10 relative bg-[#FCFCFA]">
                 {paymentSuccess ? (
                   <div className="h-full flex flex-col items-center justify-center text-center py-10">
                     <div className="w-20 h-20 bg-emerald-50 border border-emerald-100 rounded-full flex items-center justify-center mb-6 shadow-sm">
@@ -253,7 +253,7 @@ export default function Hero() {
                   </div>
                 ) : (
                   <>
-                    <div className="flex bg-slate-200/50 p-1 rounded-xl mb-8 border border-slate-200">
+                    <div className="flex bg-slate-200/50 p-1 rounded-xl mb-6 md:mb-8 border border-slate-200">
                       <button
                         onClick={() => setActiveTab("funds")}
                         className={`flex-1 py-2.5 text-xs font-bold uppercase tracking-widest rounded-lg transition-all ${
@@ -273,7 +273,7 @@ export default function Hero() {
                     </div>
 
                     {activeTab === "in-kind" ? (
-                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-8">
+                      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-6 md:py-8">
                         <div className="w-16 h-16 bg-[#E6A26C]/10 rounded-full flex items-center justify-center mx-auto mb-5">
                           <Heart className="w-8 h-8 text-[#E6A26C]" />
                         </div>
@@ -286,10 +286,10 @@ export default function Hero() {
                         </a>
                       </motion.div>
                     ) : (
-                      <motion.form initial={{ opacity: 0 }} animate={{ opacity: 1 }} onSubmit={handleDonateSubmit} className="space-y-6">
+                      <motion.form initial={{ opacity: 0 }} animate={{ opacity: 1 }} onSubmit={handleDonateSubmit} className="space-y-5 md:space-y-6">
                         
                         <div>
-                          <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-3">
+                          <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2.5">
                             Payment Method
                           </label>
                           <div className="grid grid-cols-2 gap-3">
@@ -318,7 +318,7 @@ export default function Hero() {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
                           <div>
                             <div className="flex items-center justify-between mb-2">
                               <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500">

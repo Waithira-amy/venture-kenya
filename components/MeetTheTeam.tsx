@@ -35,9 +35,15 @@ const TEAM_MEMBERS = [
   },
   {
     id: 6,
-    name: " Director Ray",
+    name: "Director Ray",
     role: "Lead D.O.P & Graphics",
     image: "/team/DOP.jpg",
+  },
+  {
+    id: 7,
+    name: "Amy Waithira",
+    role: "Software Developer",
+    image: "/team/amy.jpg",
   }
 ];
 

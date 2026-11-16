@@ -116,12 +116,18 @@ export default function Hero() {
 
   return (
     <section id="hero" className="relative min-h-[100vh] flex flex-col justify-center pt-40 md:pt-32 pb-20 bg-[#0F1611] overflow-hidden">
-      <div className="absolute inset-0 z-0">
-        <img 
-          src="/viva-americana-_pfAO4mz-RY-unsplash.jpg" 
-          alt="Venture Kenya Sunset" 
-          className="w-full h-full object-cover object-center mix-blend-screen opacity-80" 
-        />
+      {/* Background Video */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster="/viva-americana-_pfAO4mz-RY-unsplash.jpg"
+          className="w-full h-full object-cover object-center opacity-80"
+        >
+          <source src="/hero-video.mp4" type="video/mp4" />
+        </video>
         <div className="absolute inset-0 bg-gradient-to-b from-[#0F1611]/40 via-[#0F1611]/70 to-[#0F1611]" />
       </div>
 
@@ -359,8 +365,8 @@ export default function Hero() {
                               <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">
                                 Email Address
                               </label>
-                              <input
-                                type="email"
+                              <input 
+                                type="email" 
                                 placeholder="Email for receipt"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -376,7 +382,7 @@ export default function Hero() {
                           disabled={isProcessing}
                           className={`w-full py-4 rounded-xl text-white font-bold text-xs uppercase tracking-widest transition-all shadow-lg mt-2 flex items-center justify-center gap-2 ${
                             paymentMethod === "mpesa" 
-                              ? "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/20"
+                              ? "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-600/20" 
                               : "bg-[#E6A26C] hover:bg-[#d9915a] shadow-[#E6A26C]/20 text-[#0F1611]"
                           }`}
                         >

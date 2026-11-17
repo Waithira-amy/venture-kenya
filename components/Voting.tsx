@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Bell } from "lucide-react";
+import { Bell, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -21,7 +21,7 @@ export default function VotingSection() {
   const [isLive, setIsLive] = useState(false);
 
   useEffect(() => {
-    // Targets November 22, 2026 at 12:00 AM EAT (Nairobi time)
+    // Targets November 22, 2026 at 12:00 AM EAT (UTC+3)
     const targetDate = new Date("2026-11-22T00:00:00+03:00").getTime();
 
     const updateTimer = () => {
@@ -44,7 +44,6 @@ export default function VotingSection() {
 
     updateTimer();
     const interval = setInterval(updateTimer, 1000);
-
     return () => clearInterval(interval);
   }, []);
 
@@ -56,40 +55,42 @@ export default function VotingSection() {
   ];
 
   return (
-    <section id="voting" className="py-28 md:py-40 relative z-10 text-[#FCFCFA] overflow-hidden bg-[#0F1611] flex flex-col items-center justify-center min-h-[70vh]">
-      
-      {/* Static Background Image */}
-      <div className="absolute inset-0 z-0">
-        <img 
-          src="/lions-bg.jpg" 
+    <section
+      id="voting"
+      className="py-28 md:py-40 relative z-10 text-[#FCFCFA] overflow-hidden bg-[#0F1611] flex flex-col items-center justify-center min-h-[70vh]"
+    >
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <img
+          src="/lions-bg.jpg"
           alt="Venture Kenya Wildlife"
           className="w-full h-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0F1611] via-transparent to-[#0F1611]/60" />
+        <div className="absolute inset-0 bg-black/55" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0F1611] via-transparent to-[#0F1611]/55" />
       </div>
 
       {/* Main Content */}
       <div className="max-w-3xl mx-auto px-6 relative z-10 flex flex-col items-center text-center">
-        
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }} 
-          whileInView={{ opacity: 1, y: 0 }} 
-          viewport={{ once: true }} 
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.8 }}
           className="font-serif text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-5 leading-tight text-[#FCFCFA] drop-shadow-lg"
         >
-          {isLive ? "Voting Is Now Live" : "Challenge Starts Soon"}
+          {isLive ? "Challenge Is Now Live" : "Challenge Starts Soon"}
         </motion.h2>
 
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }} 
-          whileInView={{ opacity: 1, y: 0 }} 
-          viewport={{ once: true }} 
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.15 }}
           className="text-[#FCFCFA]/90 text-base md:text-lg font-light leading-relaxed mb-8 max-w-2xl drop-shadow-md"
         >
-          The Kenya Culture Shoot Challenge selection phase is currently underway. Public voting for the Stage 1 National Nominees opens on{" "}
+          The Kenya Culture Shoot Challenge selection phase is currently
+          underway. Public support for the Stage 1 National Nominees opens on{" "}
           <span className="text-[#E6A26C] font-medium">22nd November</span>.
         </motion.p>
 
@@ -116,21 +117,30 @@ export default function VotingSection() {
           ))}
         </motion.div>
 
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          whileInView={{ opacity: 1, y: 0 }} 
-          viewport={{ once: true }} 
+        {/* Stacked Primary Action Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.35 }}
+          className="flex flex-col items-center gap-3.5 w-full max-w-xs"
         >
-          <Link 
+          <Link
             href="/register"
-            className="inline-flex items-center gap-3 bg-[#E6A26C] text-[#0F1611] hover:bg-white hover:text-[#0F1611] px-8 py-4 rounded-full font-bold text-xs uppercase tracking-widest transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1"
+            className="w-full inline-flex items-center justify-center gap-3 bg-[#E6A26C] text-[#0F1611] hover:bg-white hover:text-[#0F1611] px-8 py-4 rounded-full font-bold text-xs uppercase tracking-widest transition-all shadow-xl hover:shadow-2xl hover:-translate-y-0.5"
           >
             <Bell className="w-4 h-4 text-[#0F1611]" />
             Register Talent First
           </Link>
-        </motion.div>
 
+          <Link
+            href="/participants"
+            className="w-full inline-flex items-center justify-center gap-3 bg-[#E6A26C] text-[#0F1611] hover:bg-white hover:text-[#0F1611] px-8 py-4 rounded-full font-bold text-xs uppercase tracking-widest transition-all shadow-xl hover:shadow-2xl hover:-translate-y-0.5"
+          >
+            <Users className="w-4 h-4 text-[#0F1611]" />
+            Challenge Participants
+          </Link>
+        </motion.div>
       </div>
     </section>
   );

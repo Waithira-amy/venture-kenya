@@ -41,7 +41,7 @@ export default function Navbar() {
           <button onClick={() => scrollToSection('about')} className="hover:text-[#E6A26C] transition-colors">About</button>
           <button onClick={() => scrollToSection('team')} className="hover:text-[#E6A26C] transition-colors">Team</button>
           <button onClick={() => scrollToSection('culture-shoot')} className="hover:text-[#E6A26C] transition-colors">Programme</button>
-          <button onClick={() => scrollToSection('voting')} className="hover:text-[#E6A26C] transition-colors">Voting</button>
+          <button onClick={() => scrollToSection('voting')} className="hover:text-[#E6A26C] transition-colors">Challenge</button>
           <Link 
             href="/register" 
             className="bg-[#FCFCFA] text-[#0F1611] hover:bg-[#E6A26C] hover:text-[#0F1611] px-6 py-2.5 rounded-full transition-all shadow-md"

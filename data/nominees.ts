@@ -55,7 +55,7 @@ export const CHALLENGE_CATEGORIES: ChallengeCategory[] = [
 
 export const NOMINEES: Nominee[] = [
   // ==========================================
-  // 1. MODELS/ACTORS (89 Nominees)
+  // 1. MODELS/ACTORS (99 Nominees)
   // ==========================================
   { id: "ma-001", code: "VK-MA-001", name: "Stanley Ochieng Owuor", age: 25, category: "models-actors", categoryLabel: "Models/Actors", image: "/nominees/stanley-ochieng-owuor.jpg", votes: 0 },
   { id: "ma-002", code: "VK-MA-002", name: "Diana Leisha", age: 22, category: "models-actors", categoryLabel: "Models/Actors", image: "/nominees/diana-leisha.jpg", votes: 0 },
@@ -146,6 +146,16 @@ export const NOMINEES: Nominee[] = [
   { id: "ma-087", code: "VK-MA-087", name: "Faith Atieno", age: 19, category: "models-actors", categoryLabel: "Models/Actors", image: "/nominees/faith-atieno.jpg", votes: 0 },
   { id: "ma-088", code: "VK-MA-088", name: "Colin Kennedy Mwai", age: 27, category: "models-actors", categoryLabel: "Models/Actors", image: "/nominees/colin-kennedy-mwai.jpg", votes: 0 },
   { id: "ma-089", code: "VK-MA-089", name: "Rachael Warigia", age: 25, category: "models-actors", categoryLabel: "Models/Actors", image: "/nominees/rachael-warigia.jpg", votes: 0 },
+  { id: "ma-090", code: "VK-MA-090", name: "Mary Kamau", age: 34, category: "models-actors", categoryLabel: "Models/Actors", image: "/nominees/mary-kamau.jpg", votes: 0 },
+  { id: "ma-091", code: "VK-MA-091", name: "John Ndichu Mungai", age: 20, category: "models-actors", categoryLabel: "Models/Actors", image: "/nominees/john-ndichu-mungai.jpg", votes: 0 },
+  { id: "ma-092", code: "VK-MA-092", name: "Boniface Mukuha", age: 29, category: "models-actors", categoryLabel: "Models/Actors", image: "/nominees/boniface-mukuha.jpg", votes: 0 },
+  { id: "ma-093", code: "VK-MA-093", name: "Victor Wahome Thum", age: 20, category: "models-actors", categoryLabel: "Models/Actors", image: "/nominees/victor-wahome-thum.jpg", votes: 0 },
+  { id: "ma-094", code: "VK-MA-094", name: "Nicholas Makokha", age: 19, category: "models-actors", categoryLabel: "Models/Actors", image: "/nominees/nicholas-makokha.jpg", votes: 0 },
+  { id: "ma-095", code: "VK-MA-095", name: "Joan Njeri", age: 23, category: "models-actors", categoryLabel: "Models/Actors", image: "/nominees/joan-njeri.jpg", votes: 0 },
+  { id: "ma-096", code: "VK-MA-096", name: "Olivia Kaeke William", age: 27, category: "models-actors", categoryLabel: "Models/Actors", image: "/nominees/olivia-kaeke-william.jpg", votes: 0 },
+  { id: "ma-097", code: "VK-MA-097", name: "Mollen Akinyi", age: 21, category: "models-actors", categoryLabel: "Models/Actors", image: "/nominees/mollen-akinyi.jpg", votes: 0 },
+  { id: "ma-098", code: "VK-MA-098", name: "Minika Ahono", age: 20, category: "models-actors", categoryLabel: "Models/Actors", image: "/nominees/minika-ahono.jpg", votes: 0 },
+  { id: "ma-099", code: "VK-MA-099", name: "Malath Achieng", age: 22, category: "models-actors", categoryLabel: "Models/Actors", image: "/nominees/malath-achieng.jpg", votes: 0 },
 
   // ==========================================
   // 2. FASHION DESIGNERS (10 Nominees)
@@ -162,7 +172,7 @@ export const NOMINEES: Nominee[] = [
   { id: "fd-010", code: "VK-FD-010", name: "Janet Oside", age: 23, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/janet-oside.jpg", votes: 0 },
 
   // ==========================================
-  // 3. PHOTOGRAPHERS/VIDEOGRAPHERS (24 Nominees)
+  // 3. PHOTOGRAPHERS/VIDEOGRAPHERS (28 Nominees)
   // ==========================================
   { id: "pv-001", code: "VK-PV-001", name: "Awuor Emanuel Otieno", age: 20, category: "photographers-videographers", categoryLabel: "Photographers/Videographers", image: "/nominees/awuor-emanuel-otieno.jpg", votes: 0 },
   { id: "pv-002", code: "VK-PV-002", name: "Muriet Kipkorir Rono", age: 26, category: "photographers-videographers", categoryLabel: "Photographers/Videographers", image: "/nominees/muriet-kipkorir-rono.jpg", votes: 0 },
@@ -188,6 +198,10 @@ export const NOMINEES: Nominee[] = [
   { id: "pv-022", code: "VK-PV-022", name: "Henry Meritei Lemein", age: 42, category: "photographers-videographers", categoryLabel: "Photographers/Videographers", image: "/nominees/henry-meritei-lemein.jpg", votes: 0 },
   { id: "pv-023", code: "VK-PV-023", name: "Roy Muriithi Wangui", age: 26, category: "photographers-videographers", categoryLabel: "Photographers/Videographers", image: "/nominees/roy-muriithi-wangui.jpg", votes: 0 },
   { id: "pv-024", code: "VK-PV-024", name: "Oscar Murimi Njiru", age: 27, category: "photographers-videographers", categoryLabel: "Photographers/Videographers", image: "/nominees/oscar-murimi-njiru.jpg", votes: 0 },
+  { id: "pv-025", code: "VK-PV-025", name: "Stephen Paul", age: 24, category: "photographers-videographers", categoryLabel: "Photographers/Videographers", image: "/nominees/stephen-paul.jpg", votes: 0 },
+  { id: "pv-026", code: "VK-PV-026", name: "Peter Omondi Ayany", age: 34, category: "photographers-videographers", categoryLabel: "Photographers/Videographers", image: "/nominees/peter-omondi-ayany.jpg", votes: 0 },
+  { id: "pv-027", code: "VK-PV-027", name: "Phanuel Okuma", age: 27, category: "photographers-videographers", categoryLabel: "Photographers/Videographers", image: "/nominees/phanuel-okuma.jpg", votes: 0 },
+  { id: "pv-028", code: "VK-PV-028", name: "Finn Mozze_h", age: 23, category: "photographers-videographers", categoryLabel: "Photographers/Videographers", image: "/nominees/finn-mozze-h.jpg", votes: 0 },
 
   // ==========================================
   // 4. MAKEUP ARTISTS (1 Nominee)

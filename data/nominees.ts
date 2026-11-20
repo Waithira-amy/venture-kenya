@@ -158,18 +158,17 @@ export const NOMINEES: Nominee[] = [
   { id: "ma-099", code: "VK-MA-099", name: "Malath Achieng", age: 22, category: "models-actors", categoryLabel: "Models/Actors", image: "/nominees/malath-achieng.jpg", votes: 0 },
 
   // ==========================================
-  // 2. FASHION DESIGNERS (10 Nominees)
+  // 2. FASHION DESIGNERS (9 Nominees)
   // ==========================================
-  { id: "fd-001", code: "VK-FD-001", name: "Stanley Ochieng Owuor", age: 24, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/stanley-ochieng-owuor-fd.jpg", votes: 0 },
-  { id: "fd-002", code: "VK-FD-002", name: "Stephen Omondi", age: 35, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/stephen-omondi.jpg", votes: 0 },
-  { id: "fd-003", code: "VK-FD-003", name: "Elizabeth Nangila", age: 29, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/elizabeth-nangila.jpg", votes: 0 },
-  { id: "fd-004", code: "VK-FD-004", name: "Abigael Opondo", age: 25, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/abigael-opondo.jpg", votes: 0 },
-  { id: "fd-005", code: "VK-FD-005", name: "Richard Oguna", age: 24, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/richard-oguna.jpg", votes: 0 },
-  { id: "fd-006", code: "VK-FD-006", name: "Shelize Itangakubuntu", age: 20, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/shelize-itangakubuntu.jpg", votes: 0 },
-  { id: "fd-007", code: "VK-FD-007", name: "Rosemary Akinyi Omondi", age: 28, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/rosemary-akinyi-omondi.jpg", votes: 0 },
-  { id: "fd-008", code: "VK-FD-008", name: "Mitchell Vaati Nthenya", age: 26, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/mitchell-vaati-nthenya.jpg", votes: 0 },
-  { id: "fd-009", code: "VK-FD-009", name: "Ashley Ngeru", age: 26, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/ashley-ngeru.jpg", votes: 0 },
-  { id: "fd-010", code: "VK-FD-010", name: "Janet Oside", age: 23, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/janet-oside.jpg", votes: 0 },
+  { id: "fd-001", code: "VK-FD-001", name: "Stephen Omondi", age: 35, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/stephen-omondi.jpg", votes: 0 },
+  { id: "fd-002", code: "VK-FD-002", name: "Elizabeth Nangila", age: 29, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/elizabeth-nangila.jpg", votes: 0 },
+  { id: "fd-003", code: "VK-FD-003", name: "Abigael Opondo", age: 25, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/abigael-opondo.jpg", votes: 0 },
+  { id: "fd-004", code: "VK-FD-004", name: "Richard Oguna", age: 24, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/richard-oguna.jpg", votes: 0 },
+  { id: "fd-005", code: "VK-FD-005", name: "Shelize Itangakubuntu", age: 20, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/shelize-itangakubuntu.jpg", votes: 0 },
+  { id: "fd-006", code: "VK-FD-006", name: "Rosemary Akinyi Omondi", age: 28, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/rosemary-akinyi-omondi.jpg", votes: 0 },
+  { id: "fd-007", code: "VK-FD-007", name: "Mitchell Vaati Nthenya", age: 26, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/mitchell-vaati-nthenya.jpg", votes: 0 },
+  { id: "fd-008", code: "VK-FD-008", name: "Ashley Ngeru", age: 26, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/ashley-ngeru.jpg", votes: 0 },
+  { id: "fd-009", code: "VK-FD-009", name: "Janet Oside", age: 23, category: "fashion-designers", categoryLabel: "Fashion Designers", image: "/nominees/janet-oside.jpg", votes: 0 },
 
   // ==========================================
   // 3. PHOTOGRAPHERS/VIDEOGRAPHERS (28 Nominees)

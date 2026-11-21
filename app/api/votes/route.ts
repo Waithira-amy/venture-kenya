@@ -1,21 +1,34 @@
 import { NextResponse } from "next/server";
 import { pool } from "@/lib/db";
 
-export const dynamic = "force-dynamic";
-
 // GET /api/votes -> Fetches all live nominee vote counts from Neon
-export async function GET() {
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const nomineeCode = searchParams.get("nomineeCode");
+
   try {
-    const result = await pool.query<{ nominee_code: string; votes: number }>(
-      "SELECT nominee_code, votes FROM nominee_votes"
-    );
+    const result = nomineeCode
+      ? await pool.query<{ nominee_code: string; votes: number }>(
+          "SELECT nominee_code, votes FROM nominee_votes WHERE nominee_code = $1",
+          [nomineeCode]
+        )
+      : await pool.query<{ nominee_code: string; votes: number }>(
+          "SELECT nominee_code, votes FROM nominee_votes"
+        );
 
     const votes: Record<string, number> = {};
     for (const row of result.rows) {
       votes[row.nominee_code] = Number(row.votes);
     }
 
-    return NextResponse.json({ success: true, votes });
+    return NextResponse.json(
+      { success: true, votes },
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate",
+        },
+      }
+    );
   } catch (error) {
     console.error("Error fetching votes:", error);
     return NextResponse.json(

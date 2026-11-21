@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Users,
   Scissors,
@@ -44,10 +44,8 @@ export default function ChallengeParticipantsPage() {
     useState<CategorySlug | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Local Support Tally & Link Copy State
-  const [supportOverrides, setSupportOverrides] = useState<
-    Record<string, number>
-  >({});
+  // Live Neon Database Vote Tallies (keyed by nominee.code)
+  const [dbVotes, setDbVotes] = useState<Record<string, number>>({});
   const [copiedLink, setCopiedLink] = useState(false);
 
   // Stage 1 Mobilization Modal State
@@ -59,19 +57,37 @@ export default function ChallengeParticipantsPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [supportSuccess, setSupportSuccess] = useState(false);
 
-  useEffect(() => {
+  const fetchLiveVotes = useCallback(async () => {
     try {
-      const saved = localStorage.getItem("vk_challenge_support");
-      if (saved) setSupportOverrides(JSON.parse(saved));
-    } catch {
-      // Ignore storage errors
+      const res = await fetch("/api/votes", { cache: "no-store" });
+      const data = await res.json();
+      if (data.success && data.votes) {
+        setDbVotes(data.votes);
+      }
+    } catch (err) {
+      console.error("Failed to fetch live votes:", err);
     }
+  }, []);
+
+  useEffect(() => {
+    fetchLiveVotes();
 
     const script = document.createElement("script");
     script.src = "https://js.paystack.co/v1/inline.js";
     script.async = true;
     document.body.appendChild(script);
-  }, []);
+  }, [fetchLiveVotes]);
+
+  // Poll Neon every 4 seconds right after STK push so confirmed PIN entries appear live
+  useEffect(() => {
+    if (!supportSuccess || paymentMethod !== "mpesa") return;
+    const interval = setInterval(fetchLiveVotes, 4000);
+    const timeout = setTimeout(() => clearInterval(interval), 45000);
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [supportSuccess, paymentMethod, fetchLiveVotes]);
 
   const activeCategory = useMemo(
     () =>
@@ -84,7 +100,7 @@ export default function ChallengeParticipantsPage() {
     const list = NOMINEES.filter((n) => n.category === activeCategory.slug).map(
       (n) => ({
         ...n,
-        votes: n.votes + (supportOverrides[n.id] || 0),
+        votes: n.votes + (dbVotes[n.code] || 0),
       })
     );
 
@@ -94,7 +110,17 @@ export default function ChallengeParticipantsPage() {
         n.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         n.code.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [activeCategory, searchQuery, supportOverrides]);
+  }, [activeCategory, searchQuery, dbVotes]);
+
+  const liveSelectedNominee = useMemo(() => {
+    if (!selectedNominee) return null;
+    const base =
+      NOMINEES.find((n) => n.code === selectedNominee.code) || selectedNominee;
+    return {
+      ...base,
+      votes: base.votes + (dbVotes[base.code] || 0),
+    };
+  }, [selectedNominee, dbVotes]);
 
   const handleSelectCategory = (slug: CategorySlug) => {
     setSelectedCategorySlug(slug);
@@ -119,24 +145,10 @@ export default function ChallengeParticipantsPage() {
   };
 
   const closeNomineeModal = () => {
+    fetchLiveVotes();
     setSelectedNominee(null);
     setSupportSuccess(false);
     setIsProcessing(false);
-  };
-
-  const recordLocalSupport = (nomineeId: string, addedBoosts: number) => {
-    setSupportOverrides((prev) => {
-      const updated = {
-        ...prev,
-        [nomineeId]: (prev[nomineeId] || 0) + addedBoosts,
-      };
-      try {
-        localStorage.setItem("vk_challenge_support", JSON.stringify(updated));
-      } catch {
-        // Ignore storage errors
-      }
-      return updated;
-    });
   };
 
   const handleCopyNomineeLink = async (nominee: Nominee) => {
@@ -243,14 +255,26 @@ export default function ChallengeParticipantsPage() {
       }
 
       try {
+        const paystackRef = `VK-${selectedNominee.code}-${Date.now()}`;
         const handler = (window as any).PaystackPop.setup({
           key: publicKey,
           email,
           amount: totalCostKES * 100,
           currency: "KES",
-          ref: `VK-${selectedNominee.code}-${Date.now()}`,
-          callback: function () {
-            recordLocalSupport(selectedNominee.id, boostCount);
+          ref: paystackRef,
+          callback: async function (response: any) {
+            await fetch("/api/votes", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                reference: response?.reference || paystackRef,
+                nomineeCode: selectedNominee.code,
+                email,
+                amount: totalCostKES,
+                votesPurchased: boostCount,
+              }),
+            });
+            await fetchLiveVotes();
             setSupportSuccess(true);
           },
         });
@@ -273,6 +297,7 @@ export default function ChallengeParticipantsPage() {
           phone: phoneNumber,
           amount: totalCostKES,
           reference: selectedNominee.code,
+          votes: boostCount,
           description: `Support for ${selectedNominee.name} (${boostCount} boosts)`,
         }),
       });
@@ -280,10 +305,12 @@ export default function ChallengeParticipantsPage() {
       const resData = await response.json();
 
       if (resData.success) {
-        recordLocalSupport(selectedNominee.id, boostCount);
         setSupportSuccess(true);
       } else {
-        alert("M-Pesa prompt failed to initialize. Please try again.");
+        alert(
+          resData.error ||
+            "M-Pesa prompt failed to initialize. Please try again."
+        );
       }
     } catch (error) {
       console.error("Support error:", error);
@@ -319,7 +346,6 @@ export default function ChallengeParticipantsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
           >
-            {/* Top Back Arrow to Home */}
             <div className="mb-8">
               <Link
                 href="/#voting"
@@ -329,7 +355,6 @@ export default function ChallengeParticipantsPage() {
               </Link>
             </div>
 
-            {/* Editorial Page Header */}
             <div className="max-w-2xl mb-12">
               <div className="inline-flex items-center gap-2.5 mb-3">
                 <span className="w-6 h-[1.5px] bg-[#E6A26C]" />
@@ -346,7 +371,6 @@ export default function ChallengeParticipantsPage() {
               </p>
             </div>
 
-            {/* 4 Categories Grid — Layered Champagne-Ivory Glass */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {CHALLENGE_CATEGORIES.map((category, index) => (
                 <motion.button
@@ -358,17 +382,14 @@ export default function ChallengeParticipantsPage() {
                   onClick={() => handleSelectCategory(category.slug)}
                   className="group relative overflow-hidden bg-gradient-to-br from-[#FAF6F0]/92 via-[#F5EFE6]/88 to-[#EBE1D2]/84 hover:from-white/95 hover:to-[#F6EFE4]/92 text-[#0F1611] backdrop-blur-2xl border border-[#E6A26C]/40 hover:border-[#E6A26C] ring-1 ring-inset ring-white/75 rounded-3xl p-7 sm:p-8 text-left transition-all duration-300 shadow-[0_20px_50px_rgba(15,22,17,0.4)] hover:shadow-[0_26px_60px_rgba(230,162,108,0.28)] hover:-translate-y-1 flex flex-col justify-between"
                 >
-                  {/* Decorative Editorial Watermark Number */}
                   <span className="pointer-events-none select-none absolute top-4 right-7 font-serif text-6xl sm:text-7xl font-bold text-[#0F1611]/[0.05] group-hover:text-[#9E5E28]/15 transition-colors">
                     0{index + 1}
                   </span>
 
-                  {/* Top Gold Hairline Accent */}
                   <div className="pointer-events-none absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r from-transparent via-[#E6A26C]/70 to-transparent opacity-60 group-hover:opacity-100 transition-opacity" />
 
                   <div className="relative z-10">
                     <div className="flex items-center gap-3.5 mb-6">
-                      {/* Deep Forest Icon Badge with Gold Ring */}
                       <div className="w-12 h-12 rounded-2xl bg-[#0F1611] border border-[#E6A26C]/50 flex items-center justify-center shadow-md group-hover:scale-105 group-hover:border-[#E6A26C] transition-all">
                         {CATEGORY_ICONS[category.slug]}
                       </div>
@@ -408,7 +429,6 @@ export default function ChallengeParticipantsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
           >
-            {/* Top Back Arrow to Categories */}
             <div className="mb-8">
               <button
                 type="button"
@@ -419,7 +439,6 @@ export default function ChallengeParticipantsPage() {
               </button>
             </div>
 
-            {/* Editorial Header + Matching Champagne-Ivory Search Bar */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-7 border-b border-white/15">
               <div>
                 <div className="inline-flex items-center gap-2.5 mb-2">
@@ -449,7 +468,6 @@ export default function ChallengeParticipantsPage() {
               </div>
             </div>
 
-            {/* 2-Column Horizontal Champagne-Ivory Participant Cards */}
             {categoryNominees.length === 0 ? (
               <div className="bg-[#FAF6F0]/92 backdrop-blur-2xl border border-[#E6A26C]/40 ring-1 ring-inset ring-white/75 rounded-3xl p-12 text-center text-[#0F1611] shadow-xl">
                 <p className="text-sm text-[#0F1611]/80 mb-3">
@@ -482,9 +500,8 @@ export default function ChallengeParticipantsPage() {
                       className="group relative flex items-center justify-between gap-4 bg-gradient-to-r from-[#FAF6F0]/92 via-[#F5EFE6]/88 to-[#EDE3D5]/85 hover:from-white/95 hover:to-[#F6EFE4]/95 backdrop-blur-2xl border border-[#E6A26C]/35 hover:border-[#E6A26C] ring-1 ring-inset ring-white/75 rounded-2xl p-4 sm:px-6 sm:py-5 text-left transition-all duration-200 shadow-[0_12px_30px_rgba(15,22,17,0.32)] hover:shadow-[0_18px_40px_rgba(230,162,108,0.25)] hover:-translate-y-0.5"
                     >
                       <div className="flex items-center gap-4 min-w-0">
-                        {/* Gold Gradient-Ringed Avatar with Monogram Fallback */}
                         <div className="p-[2px] rounded-full bg-gradient-to-tr from-[#B5723B] via-[#E6A26C] to-[#F7D7B5] shrink-0 shadow-sm group-hover:scale-105 transition-transform">
-                          <div className="relative w-13 h-13 w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden bg-[#0F1611] flex items-center justify-center">
+                          <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden bg-[#0F1611] flex items-center justify-center">
                             <img
                               src={nominee.image}
                               alt={nominee.name}
@@ -502,17 +519,16 @@ export default function ChallengeParticipantsPage() {
                           </div>
                         </div>
 
-                        {/* Participant Name + Code Badge & Category */}
                         <div className="min-w-0">
                           <h3 className="font-serif text-lg sm:text-xl font-bold text-[#0F1611] group-hover:text-[#6E4019] transition-colors truncate">
                             {nominee.name}
                           </h3>
-                          <div className="flex items-center gap-2 mt-1 text-xs">
+                          <div className="flex flex-wrap items-center gap-2 mt-1 text-xs">
                             <span className="px-2 py-0.5 rounded-md bg-[#0F1611]/[0.07] font-mono text-[11px] font-bold text-[#6E4019]">
                               #{nominee.code}
                             </span>
-                            <span className="text-[#1E2720]/70 truncate">
-                              {nominee.categoryLabel}
+                            <span className="px-2 py-0.5 rounded-md bg-[#E6A26C]/25 font-mono text-[11px] font-bold text-[#6E4019]">
+                              {nominee.votes.toLocaleString()} boosts
                             </span>
                           </div>
                         </div>
@@ -539,7 +555,7 @@ export default function ChallengeParticipantsPage() {
       {/* SPLIT PARTICIPANT POSTER & STAGE 1 MOBILIZATION MODAL             */}
       {/* ================================================================= */}
       <AnimatePresence>
-        {selectedNominee && (
+        {liveSelectedNominee && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -553,7 +569,6 @@ export default function ChallengeParticipantsPage() {
               transition={{ duration: 0.2 }}
               className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto bg-[#F9F6F0] text-[#0F1611] rounded-3xl shadow-2xl grid grid-cols-1 md:grid-cols-12 border border-[#E6A26C]/35"
             >
-              {/* Close Button */}
               <button
                 type="button"
                 onClick={closeNomineeModal}
@@ -567,19 +582,18 @@ export default function ChallengeParticipantsPage() {
                 <div className="bg-[#0F1611] text-[#FCFCFA] rounded-2xl p-5 flex flex-col items-center text-center shadow-xl border border-[#E6A26C]/30 relative overflow-hidden">
                   <div className="w-full flex items-center justify-between mb-5">
                     <span className="px-2.5 py-1 rounded-md bg-white/10 text-[10px] font-mono font-bold text-[#FCFCFA]">
-                      #{selectedNominee.code}
+                      #{liveSelectedNominee.code}
                     </span>
                     <span className="px-2.5 py-1 rounded-md bg-[#E6A26C] text-[10px] font-bold uppercase tracking-wider text-[#0F1611]">
-                      VK 2026
+                      {liveSelectedNominee.votes.toLocaleString()} BOOSTS
                     </span>
                   </div>
 
-                  {/* Gold-Ringed Circular Portrait */}
                   <div className="relative w-28 h-28 rounded-full border-2 border-[#E6A26C] p-1 mb-4 bg-[#17211A]">
                     <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center bg-[#1c2820]">
                       <img
-                        src={selectedNominee.image}
-                        alt={selectedNominee.name}
+                        src={liveSelectedNominee.image}
+                        alt={liveSelectedNominee.name}
                         className="w-full h-full object-cover object-top"
                         onError={(e) => {
                           e.currentTarget.style.display = "none";
@@ -589,7 +603,7 @@ export default function ChallengeParticipantsPage() {
                         }}
                       />
                       <span className="hidden w-full h-full items-center justify-center font-serif text-2xl font-bold text-[#E6A26C]">
-                        {selectedNominee.name
+                        {liveSelectedNominee.name
                           .split(" ")
                           .slice(0, 2)
                           .map((p) => p[0])
@@ -603,12 +617,12 @@ export default function ChallengeParticipantsPage() {
                     OFFICIAL PARTICIPANT
                   </p>
                   <h4 className="font-serif text-xl font-bold text-[#FCFCFA] leading-snug mb-5">
-                    {selectedNominee.name}
+                    {liveSelectedNominee.name}
                   </h4>
 
                   <div className="w-full bg-white/[0.06] border border-white/10 rounded-xl py-2.5 px-3">
                     <p className="text-[9px] font-bold uppercase tracking-wider text-[#FCFCFA]">
-                      {selectedNominee.categoryLabel}
+                      {liveSelectedNominee.categoryLabel}
                     </p>
                     <p className="text-[8px] font-bold uppercase tracking-[0.18em] text-[#E6A26C] mt-0.5">
                       SUPPORT AT VENTUREKENYA.CO.KE
@@ -616,11 +630,10 @@ export default function ChallengeParticipantsPage() {
                   </div>
                 </div>
 
-                {/* Copy Link & Save Buttons */}
                 <div className="grid grid-cols-2 gap-2.5 mt-4">
                   <button
                     type="button"
-                    onClick={() => handleCopyNomineeLink(selectedNominee)}
+                    onClick={() => handleCopyNomineeLink(liveSelectedNominee)}
                     className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-white/90 hover:bg-white border border-[#0F1611]/10 text-[10px] font-bold uppercase tracking-widest text-[#0F1611] transition-colors shadow-sm"
                   >
                     {copiedLink ? (
@@ -638,7 +651,7 @@ export default function ChallengeParticipantsPage() {
 
                   <button
                     type="button"
-                    onClick={() => handleSavePoster(selectedNominee)}
+                    onClick={() => handleSavePoster(liveSelectedNominee)}
                     className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-white/90 hover:bg-white border border-[#0F1611]/10 text-[10px] font-bold uppercase tracking-widest text-[#7D491E] transition-colors shadow-sm"
                   >
                     <Download className="w-3.5 h-3.5" /> Save
@@ -654,12 +667,14 @@ export default function ChallengeParticipantsPage() {
                       <CheckCircle2 className="w-9 h-9 text-emerald-600" />
                     </div>
                     <h3 className="font-serif text-2xl font-bold text-[#0F1611] mb-2">
-                      Support Submitted!
+                      {paymentMethod === "mpesa"
+                        ? "Enter M-Pesa PIN"
+                        : "Support Recorded!"}
                     </h3>
                     <p className="text-xs sm:text-sm text-slate-600 max-w-xs mx-auto mb-6 leading-relaxed">
                       {paymentMethod === "mpesa"
-                        ? `An M-Pesa STK prompt for KES ${totalCostKES.toLocaleString()} has been sent to your phone for ${selectedNominee.name}.`
-                        : `Thank you! Your ${boostCount} boosts for ${selectedNominee.name} have been recorded.`}
+                        ? `An M-Pesa prompt for KES ${totalCostKES.toLocaleString()} was sent to your phone. Once confirmed, ${liveSelectedNominee.name}'s boosts update automatically.`
+                        : `Thank you! Your ${boostCount} boosts for ${liveSelectedNominee.name} have been saved.`}
                     </p>
                     <button
                       type="button"
@@ -676,12 +691,11 @@ export default function ChallengeParticipantsPage() {
                         Stage 1 Mobilization
                       </h3>
                       <p className="text-xs text-slate-500 mt-1">
-                        Securely support {selectedNominee.name}. (1 Boost = KES{" "}
-                        {BOOST_PRICE_KES})
+                        Securely support {liveSelectedNominee.name}. (1 Boost =
+                        KES {BOOST_PRICE_KES})
                       </p>
                     </div>
 
-                    {/* Select Payment Method */}
                     <div>
                       <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">
                         Select Payment Method:
@@ -712,7 +726,6 @@ export default function ChallengeParticipantsPage() {
                       </div>
                     </div>
 
-                    {/* Select Support Bundle (+1, +5, +10, +50) */}
                     <div>
                       <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">
                         Select Support Bundle:
@@ -735,7 +748,6 @@ export default function ChallengeParticipantsPage() {
                       </div>
                     </div>
 
-                    {/* Custom Amount Stepper */}
                     <div className="flex items-center justify-between bg-[#EFE8DC]/70 border border-[#0F1611]/10 rounded-xl px-4 py-2.5">
                       <span className="text-xs font-medium text-slate-700">
                         Custom Amount:
@@ -771,7 +783,6 @@ export default function ChallengeParticipantsPage() {
                       </div>
                     </div>
 
-                    {/* Phone Number or Email Input */}
                     {paymentMethod === "mpesa" ? (
                       <div>
                         <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">
@@ -805,7 +816,6 @@ export default function ChallengeParticipantsPage() {
                       </div>
                     )}
 
-                    {/* Total Cost Bar */}
                     <div className="flex items-center justify-between pt-2 border-t border-slate-200">
                       <span className="text-xs font-medium text-slate-500">
                         Total Cost:
@@ -815,7 +825,6 @@ export default function ChallengeParticipantsPage() {
                       </span>
                     </div>
 
-                    {/* Submit CTA Button */}
                     <button
                       type="submit"
                       disabled={isProcessing}

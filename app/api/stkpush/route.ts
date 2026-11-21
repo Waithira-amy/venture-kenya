@@ -3,10 +3,13 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { phone, amount, reference, description } = body;
+    const { phone, amount, reference, description, votes } = body;
 
     if (!phone || !amount) {
-      return NextResponse.json({ success: false, error: "Phone and amount are required" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: "Phone and amount are required" },
+        { status: 400 }
+      );
     }
 
     // Format phone number to 254...
@@ -20,70 +23,92 @@ export async function POST(req: Request) {
     const consumerKey = process.env.MPESA_CONSUMER_KEY;
     const consumerSecret = process.env.MPESA_CONSUMER_SECRET;
     const passkey = process.env.MPESA_PASSKEY;
-    
+
     // For Buy Goods: SHORTCODE is the Store Number, TILL_NUMBER is the public Till
-    const shortcode = process.env.MPESA_SHORTCODE; 
-    const tillNumber = process.env.MPESA_TILL_NUMBER || shortcode; 
+    const shortcode = process.env.MPESA_SHORTCODE;
+    const tillNumber = process.env.MPESA_TILL_NUMBER || shortcode;
     const callbackUrl = process.env.MPESA_CALLBACK_URL;
 
     if (!consumerKey || !consumerSecret || !passkey || !shortcode || !callbackUrl) {
-       console.error("Missing M-Pesa environment variables");
-       return NextResponse.json({ success: false, error: "Server configuration error" }, { status: 500 });
+      console.error("Missing M-Pesa environment variables");
+      return NextResponse.json(
+        { success: false, error: "Server configuration error" },
+        { status: 500 }
+      );
+    }
+
+    // Attach nomineeCode & votes to CallBackURL so the callback knows who to credit
+    const dynamicCallbackUrl = new URL(callbackUrl);
+    if (reference) {
+      dynamicCallbackUrl.searchParams.set("nomineeCode", String(reference));
+    }
+    if (votes) {
+      dynamicCallbackUrl.searchParams.set("votes", String(votes));
     }
 
     // 1. Get Access Token (LIVE URL)
     const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString("base64");
-    const tokenRes = await fetch("https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials", {
-      headers: { Authorization: `Basic ${auth}` },
-      cache: 'no-store'
-    });
-    
+    const tokenRes = await fetch(
+      "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials",
+      {
+        headers: { Authorization: `Basic ${auth}` },
+        cache: "no-store",
+      }
+    );
+
     if (!tokenRes.ok) {
       throw new Error("Failed to get M-Pesa access token");
     }
-    
+
     const tokenData = await tokenRes.json();
     const accessToken = tokenData.access_token;
 
     // 2. Prepare STK Push Password & Timestamp
-    // The password MUST be generated using the STORE NUMBER (shortcode), not the Till Number
     const timestamp = new Date().toISOString().replace(/[^0-9]/g, "").slice(0, -3);
     const password = Buffer.from(`${shortcode}${passkey}${timestamp}`).toString("base64");
 
     // 3. Initiate STK Push (LIVE URL)
     const stkPayload = {
-      BusinessShortCode: shortcode,      // Must be the Store Number
+      BusinessShortCode: shortcode,
       Password: password,
       Timestamp: timestamp,
-      TransactionType: "CustomerBuyGoodsOnline", 
+      TransactionType: "CustomerBuyGoodsOnline",
       Amount: Math.ceil(amount),
       PartyA: formattedPhone,
-      PartyB: tillNumber,                // Must be the Till Number
+      PartyB: tillNumber,
       PhoneNumber: formattedPhone,
-      CallBackURL: callbackUrl,
+      CallBackURL: dynamicCallbackUrl.toString(),
       AccountReference: reference || "VentureKenya",
-      TransactionDesc: description || "Donation to Venture Kenya",
+      TransactionDesc: description || "Support Venture Kenya Participant",
     };
 
-    const stkRes = await fetch("https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(stkPayload),
-    });
+    const stkRes = await fetch(
+      "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(stkPayload),
+      }
+    );
 
     const stkData = await stkRes.json();
 
     if (stkData.ResponseCode === "0") {
       return NextResponse.json({ success: true, data: stkData });
     } else {
-      return NextResponse.json({ success: false, error: stkData.errorMessage || "STK Push failed" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: stkData.errorMessage || "STK Push failed" },
+        { status: 400 }
+      );
     }
-
   } catch (error: any) {
     console.error("STK Push Error:", error);
-    return NextResponse.json({ success: false, error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

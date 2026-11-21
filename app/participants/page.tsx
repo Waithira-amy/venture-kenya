@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import {
   Users,
+  User,
   Scissors,
   Camera,
   Sparkles,
@@ -372,12 +373,21 @@ export default function ChallengeParticipantsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
           >
-            <div className="mb-8">
+            {/* Top Bar: Back + Nominee Login */}
+            <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
               <Link
                 href="/#voting"
                 className="inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#0F1611]/75 hover:bg-[#E6A26C] text-[#FCFCFA] hover:text-[#0F1611] border border-[#E6A26C]/45 text-xs font-bold uppercase tracking-widest transition-all backdrop-blur-md shadow-lg hover:-translate-y-0.5"
               >
                 <ArrowLeft className="w-4 h-4" /> Back
+              </Link>
+
+              <Link
+                href="/nominee"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0F1611]/90 hover:bg-[#E6A26C] text-[#FCFCFA] hover:text-[#0F1611] border border-[#E6A26C]/50 text-[11px] font-bold uppercase tracking-widest transition-all backdrop-blur-md shadow-lg hover:-translate-y-0.5"
+              >
+                <User className="w-3.5 h-3.5 text-[#E6A26C] group-hover:text-[#0F1611]" />
+                Nominee Login
               </Link>
             </div>
 
@@ -465,7 +475,8 @@ export default function ChallengeParticipantsPage() {
               </button>
             </div>
 
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 pb-7 border-b border-white/15">
+            {/* Header Row with Nominee Login + Search Input Side-by-Side */}
+            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10 pb-7 border-b border-white/15">
               <div>
                 <div className="inline-flex items-center gap-2.5 mb-2">
                   <span className="w-6 h-[1.5px] bg-[#E6A26C]" />
@@ -482,15 +493,25 @@ export default function ChallengeParticipantsPage() {
                 </p>
               </div>
 
-              <div className="relative w-full md:w-80">
-                <Search className="w-4 h-4 text-[#7D491E] absolute left-4 top-1/2 -translate-y-1/2 z-10" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search name or code..."
-                  className="w-full bg-[#FAF6F0]/92 focus:bg-white border border-[#E6A26C]/45 focus:border-[#E6A26C] ring-1 ring-inset ring-white/75 rounded-full py-3.5 pl-11 pr-4 text-xs font-medium text-[#0F1611] placeholder:text-[#0F1611]/45 focus:outline-none backdrop-blur-xl shadow-lg transition-all"
-                />
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
+                <Link
+                  href="/nominee"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-full bg-[#0F1611] hover:bg-[#E6A26C] text-[#FCFCFA] hover:text-[#0F1611] border border-[#E6A26C]/50 text-[11px] font-bold uppercase tracking-widest transition-all shadow-lg shrink-0"
+                >
+                  <User className="w-3.5 h-3.5" />
+                  Nominee Login
+                </Link>
+
+                <div className="relative w-full sm:w-72">
+                  <Search className="w-4 h-4 text-[#7D491E] absolute left-4 top-1/2 -translate-y-1/2 z-10" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search nominee..."
+                    className="w-full bg-[#FAF6F0]/92 focus:bg-white border border-[#E6A26C]/45 focus:border-[#E6A26C] ring-1 ring-inset ring-white/75 rounded-full py-3.5 pl-11 pr-4 text-xs font-medium text-[#0F1611] placeholder:text-[#0F1611]/45 focus:outline-none backdrop-blur-xl shadow-lg transition-all"
+                  />
+                </div>
               </div>
             </div>
 
@@ -720,14 +741,14 @@ export default function ChallengeParticipantsPage() {
                           <CheckCircle2 className="w-9 h-9 text-emerald-600" />
                         </div>
                         <h3 className="font-serif text-2xl font-bold text-[#0F1611] mb-2">
-                          Thank You for Voting!
+                          Thank You for Voting! 🎉
                         </h3>
                         <p className="text-xs sm:text-sm text-slate-600 max-w-xs mx-auto mb-6 leading-relaxed">
                           Thank you for voting for{" "}
                           <span className="font-semibold text-[#0F1611]">
                             {liveSelectedNominee.name}
                           </span>{" "}
-                          for Venture Kenya! Your {boostCount}{" "}
+                          for Venture Kenya! 🇰🇪✨ Your {boostCount}{" "}
                           {boostCount === 1 ? "vote has" : "votes have"} been
                           recorded.
                         </p>

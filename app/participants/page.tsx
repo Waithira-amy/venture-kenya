@@ -56,6 +56,8 @@ export default function ChallengeParticipantsPage() {
   const [email, setEmail] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [supportSuccess, setSupportSuccess] = useState(false);
+  const [votesBeforePayment, setVotesBeforePayment] = useState<number>(0);
+  const [voteConfirmed, setVoteConfirmed] = useState(false);
 
   const fetchLiveVotes = useCallback(async () => {
     try {
@@ -77,17 +79,6 @@ export default function ChallengeParticipantsPage() {
     script.async = true;
     document.body.appendChild(script);
   }, [fetchLiveVotes]);
-
-  // Poll Neon every 4 seconds right after STK push so confirmed PIN entries appear live
-  useEffect(() => {
-    if (!supportSuccess || paymentMethod !== "mpesa") return;
-    const interval = setInterval(fetchLiveVotes, 4000);
-    const timeout = setTimeout(() => clearInterval(interval), 45000);
-    return () => {
-      clearInterval(interval);
-      clearTimeout(timeout);
-    };
-  }, [supportSuccess, paymentMethod, fetchLiveVotes]);
 
   const activeCategory = useMemo(
     () =>
@@ -122,6 +113,36 @@ export default function ChallengeParticipantsPage() {
     };
   }, [selectedNominee, dbVotes]);
 
+  // Poll Neon every 2.5 seconds after STK push until the confirmed vote arrives
+  useEffect(() => {
+    if (!supportSuccess || paymentMethod !== "mpesa" || voteConfirmed) return;
+    const interval = setInterval(fetchLiveVotes, 2500);
+    const timeout = setTimeout(() => clearInterval(interval), 60000);
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [supportSuccess, paymentMethod, voteConfirmed, fetchLiveVotes]);
+
+  // Switch modal to Thank You message as soon as the database vote count increases
+  useEffect(() => {
+    if (
+      supportSuccess &&
+      paymentMethod === "mpesa" &&
+      !voteConfirmed &&
+      liveSelectedNominee &&
+      liveSelectedNominee.votes > votesBeforePayment
+    ) {
+      setVoteConfirmed(true);
+    }
+  }, [
+    supportSuccess,
+    paymentMethod,
+    voteConfirmed,
+    liveSelectedNominee,
+    votesBeforePayment,
+  ]);
+
   const handleSelectCategory = (slug: CategorySlug) => {
     setSelectedCategorySlug(slug);
     setSearchQuery("");
@@ -139,6 +160,7 @@ export default function ChallengeParticipantsPage() {
     setBoostCount(10);
     setPaymentMethod("mpesa");
     setSupportSuccess(false);
+    setVoteConfirmed(false);
     setPhoneNumber("");
     setEmail("");
     setCopiedLink(false);
@@ -148,6 +170,7 @@ export default function ChallengeParticipantsPage() {
     fetchLiveVotes();
     setSelectedNominee(null);
     setSupportSuccess(false);
+    setVoteConfirmed(false);
     setIsProcessing(false);
   };
 
@@ -275,6 +298,7 @@ export default function ChallengeParticipantsPage() {
               }),
             });
             await fetchLiveVotes();
+            setVoteConfirmed(true);
             setSupportSuccess(true);
           },
         });
@@ -287,6 +311,8 @@ export default function ChallengeParticipantsPage() {
     }
 
     if (!phoneNumber) return alert("Please enter a valid M-Pesa phone number.");
+    setVotesBeforePayment(liveSelectedNominee?.votes ?? selectedNominee.votes);
+    setVoteConfirmed(false);
     setIsProcessing(true);
 
     try {
@@ -663,26 +689,57 @@ export default function ChallengeParticipantsPage() {
               <div className="md:col-span-7 p-6 sm:p-8 flex flex-col justify-center">
                 {supportSuccess ? (
                   <div className="text-center py-8">
-                    <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center mx-auto mb-4">
-                      <CheckCircle2 className="w-9 h-9 text-emerald-600" />
-                    </div>
-                    <h3 className="font-serif text-2xl font-bold text-[#0F1611] mb-2">
-                      {paymentMethod === "mpesa"
-                        ? "Enter M-Pesa PIN"
-                        : "Support Recorded!"}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 max-w-xs mx-auto mb-6 leading-relaxed">
-                      {paymentMethod === "mpesa"
-                        ? `An M-Pesa prompt for KES ${totalCostKES.toLocaleString()} was sent to your phone. Once confirmed, ${liveSelectedNominee.name}'s boosts update automatically.`
-                        : `Thank you! Your ${boostCount} boosts for ${liveSelectedNominee.name} have been saved.`}
-                    </p>
-                    <button
-                      type="button"
-                      onClick={closeNomineeModal}
-                      className="px-8 py-3 rounded-full bg-[#0F1611] text-[#FCFCFA] text-xs font-bold uppercase tracking-widest"
-                    >
-                      Done
-                    </button>
+                    {paymentMethod === "mpesa" && !voteConfirmed ? (
+                      <>
+                        <div className="w-16 h-16 rounded-full bg-amber-50 border border-[#E6A26C]/40 flex items-center justify-center mx-auto mb-4">
+                          <Loader2 className="w-8 h-8 text-[#7D491E] animate-spin" />
+                        </div>
+                        <h3 className="font-serif text-2xl font-bold text-[#0F1611] mb-2">
+                          Enter Your M-Pesa PIN
+                        </h3>
+                        <p className="text-xs sm:text-sm text-slate-600 max-w-xs mx-auto mb-6 leading-relaxed">
+                          An M-Pesa prompt for KES{" "}
+                          {totalCostKES.toLocaleString()} was sent to your
+                          phone. Enter your PIN to confirm your vote for{" "}
+                          <span className="font-semibold text-[#0F1611]">
+                            {liveSelectedNominee.name}
+                          </span>
+                          .
+                        </p>
+                        <button
+                          type="button"
+                          onClick={closeNomineeModal}
+                          className="px-8 py-3 rounded-full bg-[#0F1611] text-[#FCFCFA] text-xs font-bold uppercase tracking-widest"
+                        >
+                          Close
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center mx-auto mb-4">
+                          <CheckCircle2 className="w-9 h-9 text-emerald-600" />
+                        </div>
+                        <h3 className="font-serif text-2xl font-bold text-[#0F1611] mb-2">
+                          Thank You for Voting!
+                        </h3>
+                        <p className="text-xs sm:text-sm text-slate-600 max-w-xs mx-auto mb-6 leading-relaxed">
+                          Thank you for voting for{" "}
+                          <span className="font-semibold text-[#0F1611]">
+                            {liveSelectedNominee.name}
+                          </span>{" "}
+                          for Venture Kenya! Your {boostCount}{" "}
+                          {boostCount === 1 ? "vote has" : "votes have"} been
+                          recorded.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={closeNomineeModal}
+                          className="px-8 py-3 rounded-full bg-[#0F1611] text-[#FCFCFA] text-xs font-bold uppercase tracking-widest"
+                        >
+                          Done
+                        </button>
+                      </>
+                    )}
                   </div>
                 ) : (
                   <form onSubmit={handleSupportSubmit} className="space-y-5">

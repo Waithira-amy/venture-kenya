@@ -86,7 +86,7 @@ export async function POST(req: Request) {
           await client.query("COMMIT");
         } catch (dbError) {
           await client.query("ROLLBACK");
-          console.error("Database error recording M-Pesa vote:", dbError);
+          console.error("Database error saving M-Pesa vote:", dbError);
         } finally {
           client.release();
         }

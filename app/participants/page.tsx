@@ -574,9 +574,6 @@ export default function ChallengeParticipantsPage() {
                             <span className="px-2 py-0.5 rounded-md bg-[#0F1611]/[0.07] font-mono text-[11px] font-bold text-[#6E4019]">
                               #{nominee.code}
                             </span>
-                            <span className="px-2 py-0.5 rounded-md bg-[#E6A26C]/25 font-mono text-[11px] font-bold text-[#6E4019]">
-                              {nominee.votes.toLocaleString()} boosts
-                            </span>
                           </div>
                         </div>
                       </div>
@@ -632,7 +629,7 @@ export default function ChallengeParticipantsPage() {
                       #{liveSelectedNominee.code}
                     </span>
                     <span className="px-2.5 py-1 rounded-md bg-[#E6A26C] text-[10px] font-bold uppercase tracking-wider text-[#0F1611]">
-                      {liveSelectedNominee.votes.toLocaleString()} BOOSTS
+                      VK 2026
                     </span>
                   </div>
 
